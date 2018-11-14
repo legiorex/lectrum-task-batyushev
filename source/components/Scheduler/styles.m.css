@@ -119,8 +119,23 @@
             align-items: center;
 
             & div {
+                width: 25px;
+                height: 25px;
+                display: block;
                 margin: 0 20px;
                 cursor: pointer;
+
+                & svg {
+                    width: 25px;
+                    height: 25px;
+                    display: block;
+
+                    & g {
+                        & rect {
+                            stroke-width: 2;
+                        }
+                    }
+                }
             }
 
             & .completeAllTasks {
