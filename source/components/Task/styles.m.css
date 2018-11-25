@@ -1,32 +1,32 @@
 @import '../../theme/breakpoints';
 
 .task {
-    position: relative;
-    display: flex;
     align-items: center;
-    justify-content: space-between;
-    height: 61px;
-    margin-bottom: 13px;
-    padding: 0 20px;
     background-color: var(--paletteColor2);
     border-radius: 5px;
     box-shadow: 6px 6px 14px var(--rgbaColor1);
+    display: flex;
     font-size: 20px;
     font-weight: 400;
+    height: 61px;
+    justify-content: space-between;
+    margin-bottom: 13px;
+    padding: 0 20px;
+    position: relative;
 
     & svg {
-        cursor: pointer;
+        cursor: pointer;        
     }
 
     & .content {
-        display: flex;
         align-items: center;
+        display: flex;
         width: 85%;
-
-        & .toggleTaskCompletedState {
+        
+        &.toggleTaskCompletedState {
             margin-right: 20px;
         }
-
+       
         & span {
             display: flex;
             align-items: center;
@@ -36,9 +36,12 @@
         & input[type='text'] {
             width: 100%;
             border-color: transparent;
+            /* color: var(--paletteColor6); */
+            font-size: 20px;
+            transition: color .1s ease-in-out;
 
             &:not([disabled]) {
-                border-color: var(--paletteColor3);
+                /* border-color: var(--paletteColor3); */
             }
         }
     }
