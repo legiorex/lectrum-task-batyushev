@@ -4,21 +4,6 @@ import React, { PureComponent } from "react";
 // Instruments
 import Styles from "./styles.m.css";
 
-const data = [
-    {
-        id:      1,
-        message: "тестовая задача 1",
-    },
-    {
-        id:      2,
-        message: "тестовая задача 2",
-    },
-    {
-        id:      3,
-        message: "тестовая задача 3",
-    }
-];
-
 export default class Task extends PureComponent {
     _getTaskShape = ({
         id = this.props.id,

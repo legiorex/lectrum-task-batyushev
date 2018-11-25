@@ -52,8 +52,7 @@ export default class Scheduler extends Component {
 
     _handleFormSubmit (event) {
         event.preventDefault();
-        this._submitTask();
-        // console.log('test');
+        this._submitTask();        
     }
 
     _submitTask () {
@@ -69,7 +68,7 @@ export default class Scheduler extends Component {
 
     render () {
         const { tasks, newMessage } = this.state;
-        // const newMessage = '';
+        
         const tasksJSX = tasks.map((task) => {
             return <Task key = { task.id } { ...task } />;
         });
