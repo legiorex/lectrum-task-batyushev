@@ -1,14 +1,79 @@
 // Core
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import Task from '../Task';
+import Task from "../Task";
 
 // Instruments
-import Styles from './styles.m.css';
-import { api } from '../../REST'; // ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
+import Styles from "./styles.m.css";
+import { getUniqueID } from "instruments";
+import { api } from "../../REST"; // ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
 
 export default class Scheduler extends Component {
+    constructor () {
+        super();
+        this._updateMessage = this._updateMessage.bind(this);
+        this._handleFormSubmit = this._handleFormSubmit.bind(this);
+        this._createTask = this._createTask.bind(this);
+    }
+
+    state = {
+        tasks: [
+            {
+                id:        "it14f",
+                message:   "Тестовая задача 1",
+                completed: false,
+            },
+            {
+                id:        "153",
+                message:   "Тестовая задача 2",
+                completed: false,
+            }
+        ],
+        isSpinning: false,
+        newMessage: "",
+    };
+
+    _createTask = (newMessage) => {
+        const task = {
+            id:        getUniqueID(),
+            message:   newMessage,
+            completed: false,
+        };
+
+        this.setState(({ tasks }) => ({
+            tasks:      [task, ...tasks],
+            isSpinning: false,
+        }));
+    };
+
+    _updateMessage (event) {
+        this.setState({ newMessage: event.target.value });
+    }
+
+    _handleFormSubmit (event) {
+        event.preventDefault();
+        this._submitTask();
+        // console.log('test');
+    }
+
+    _submitTask () {
+        const { newMessage } = this.state;
+
+        if (!newMessage) {
+            return null;
+        }
+
+        this._createTask(newMessage);
+        this.setState({ newMessage: "" });
+    }
+
     render () {
+        const { tasks, newMessage } = this.state;
+        // const newMessage = '';
+        const tasksJSX = tasks.map((task) => {
+            return <Task key = { task.id } { ...task } />;
+        });
+
         return (
             <section className = { Styles.scheduler }>
                 <main>
@@ -17,23 +82,22 @@ export default class Scheduler extends Component {
                         <input placeholder = 'Поиск' type = 'search' value = '' />
                     </header>
                     <section>
-                        <form>
+                        <form onSubmit = { this._handleFormSubmit }>
                             <input
                                 maxLength = '50'
                                 placeholder = 'Описaние моей новой задачи'
                                 type = 'text'
-                                value = ''
+                                value = { newMessage }
+                                onChange = { this._updateMessage }
                             />
-                            <button>Добавить задачу</button>
+                            <button type = 'submit'>Добавить задачу</button>
                         </form>
                         <div>
                             <ul>
-                                <div style={{position: 'relative'}}>
-                                    <Task />
+                                <div style = { { position: "relative" } }>
+                                    {tasksJSX}
                                 </div>
-
                             </ul>
-
                         </div>
                     </section>
                     <footer>

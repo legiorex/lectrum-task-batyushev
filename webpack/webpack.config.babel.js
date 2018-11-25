@@ -11,7 +11,7 @@ export default (env) => {
     const dev = env === 'development';
 
     if (dev) {
-        setImmediate(() => openBrowser('http://localhost:3000'));
+        setImmediate(() => openBrowser('http://localhost:3001'));
     }
 
     return dev
