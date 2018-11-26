@@ -14,6 +14,7 @@ export default class Scheduler extends Component {
         this._updateMessage = this._updateMessage.bind(this);
         this._handleFormSubmit = this._handleFormSubmit.bind(this);
         this._createTask = this._createTask.bind(this);
+        this._removeTask = this._removeTask.bind(this);
     }
 
     state = {
@@ -52,7 +53,7 @@ export default class Scheduler extends Component {
 
     _handleFormSubmit (event) {
         event.preventDefault();
-        this._submitTask();        
+        this._submitTask();
     }
 
     _submitTask () {
@@ -66,11 +67,26 @@ export default class Scheduler extends Component {
         this.setState({ newMessage: "" });
     }
 
+    _removeTask (id) {
+
+        const newTasks = this.state.tasks.filter((task) => {
+
+
+            return task.id !== id;
+        });
+
+        this.setState({ tasks: newTasks });
+    }
+
     render () {
         const { tasks, newMessage } = this.state;
-        
+
         const tasksJSX = tasks.map((task) => {
-            return <Task key = { task.id } { ...task } />;
+            return (<Task
+                key = { task.id }
+                { ...task }
+                _removeTask = { this._removeTask }
+            />);
         });
 
         return (

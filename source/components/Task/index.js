@@ -5,6 +5,11 @@ import React, { PureComponent } from "react";
 import Styles from "./styles.m.css";
 
 export default class Task extends PureComponent {
+    constructor () {
+        super();
+        this._removeTask = this._removeTask.bind(this);
+    }
+
     _getTaskShape = ({
         id = this.props.id,
         completed = this.props.completed,
@@ -16,6 +21,13 @@ export default class Task extends PureComponent {
         favorite,
         message,
     });
+
+    _removeTask () {
+        const { _removeTask, id } = this.props;
+        
+
+        _removeTask(id);
+    }
 
     render () {
         const { id, message, completed } = this.props;
@@ -100,6 +112,7 @@ export default class Task extends PureComponent {
                         </svg>
                     </div>
                     <div
+                        onClick = { this._removeTask }
                         style = { {
                             width:   17,
                             height:  17,
