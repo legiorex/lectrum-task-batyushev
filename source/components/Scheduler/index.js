@@ -15,6 +15,7 @@ export default class Scheduler extends Component {
         this._handleFormSubmit = this._handleFormSubmit.bind(this);
         this._createTask = this._createTask.bind(this);
         this._removeTask = this._removeTask.bind(this);
+        this._favoriteState = this._favoriteState.bind(this);
     }
 
     state = {
@@ -23,11 +24,13 @@ export default class Scheduler extends Component {
                 id:        "it14f",
                 message:   "Тестовая задача 1",
                 completed: false,
+                favorite:  true,
             },
             {
                 id:        "153",
                 message:   "Тестовая задача 2",
                 completed: false,
+                favorite:  false,
             }
         ],
         isSpinning: false,
@@ -71,22 +74,45 @@ export default class Scheduler extends Component {
 
         const newTasks = this.state.tasks.filter((task) => {
 
-
             return task.id !== id;
         });
 
         this.setState({ tasks: newTasks });
     }
 
+    _favoriteState (id) {
+        const newFavoriteState = this.state.tasks.map((task) => {
+            if (task.id === id) {
+                if (task.favorite === false) {
+                    return {
+                        ...task,
+                        favorite: true,
+                    };
+                }
+
+                return {
+                    ...task,
+                    favorite: false,
+                };
+
+            }
+            
+        });
+
+        this.setState({
+            tasks: newFavoriteState,
+            isSpinning: false,
+            newMessage: "",
+
+        });
+
+    }
+
     render () {
         const { tasks, newMessage } = this.state;
 
         const tasksJSX = tasks.map((task) => {
-            return (<Task
-                key = { task.id }
-                { ...task }
-                _removeTask = { this._removeTask }
-            />);
+            return <Task key = { task.id } { ...task } _favoriteState = { this._favoriteState } _removeTask = { this._removeTask } />;
         });
 
         return (
