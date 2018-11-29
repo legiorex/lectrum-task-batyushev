@@ -1,12 +1,12 @@
 // Core
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import Task from "../Task";
+import Task from '../Task';
 
 // Instruments
-import Styles from "./styles.m.css";
-import { getUniqueID } from "instruments";
-import { api } from "../../REST"; // ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
+import Styles from './styles.m.css';
+import { getUniqueID } from 'instruments';
+import { api } from '../../REST'; // ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
 
 export default class Scheduler extends Component {
     constructor () {
@@ -15,23 +15,38 @@ export default class Scheduler extends Component {
         this._handleFormSubmit = this._handleFormSubmit.bind(this);
         this._createTask = this._createTask.bind(this);
         this._removeTask = this._removeTask.bind(this);
+        this._favoriteTask = this._favoriteTask.bind(this);
     }
 
     state = {
         tasks: [
             {
-                id:        "it14f",
-                message:   "Тестовая задача 1",
+                id:        '1',
+                message:   'Тестовая задача 1',
                 completed: false,
+                favorite:  false,
             },
             {
-                id:        "153",
-                message:   "Тестовая задача 2",
+                id:        '2',
+                message:   'Тестовая задача 2',
                 completed: false,
+                favorite:  false,
+            },
+            {
+                id:        '3',
+                message:   'Тестовая задача 3',
+                completed: false,
+                favorite:  false,
+            },
+            {
+                id:        '4',
+                message:   'Тестовая задача 4',
+                completed: false,
+                favorite:  false,
             }
         ],
         isSpinning: false,
-        newMessage: "",
+        newMessage: '',
     };
 
     _createTask = (newMessage) => {
@@ -39,6 +54,7 @@ export default class Scheduler extends Component {
             id:        getUniqueID(),
             message:   newMessage,
             completed: false,
+            favorite:  false,
         };
 
         this.setState(({ tasks }) => ({
@@ -64,29 +80,60 @@ export default class Scheduler extends Component {
         }
 
         this._createTask(newMessage);
-        this.setState({ newMessage: "" });
+        this.setState({ newMessage: '' });
     }
 
     _removeTask (id) {
-
         const newTasks = this.state.tasks.filter((task) => {
-
-
             return task.id !== id;
         });
 
         this.setState({ tasks: newTasks });
     }
+    _favoriteTask (id) {
+        const favoriteSetState = this.state.tasks.map((task) => {
+            if (task.id === id) {
+                if (task.favorite === false) {
+                    return {
+                        ...task,
+                        favorite: true,
+                    };
+                }
+
+                return {
+                    ...task,
+                    favorite: false,
+                };
+            }
+
+            return task;
+        });
+
+        this.setState({
+            tasks: favoriteSetState,
+        });
+    }
 
     render () {
         const { tasks, newMessage } = this.state;
 
+        tasks.sort((a, b) => {
+            if (a.favorite < b.favorite) {
+                return 1;
+            }
+
+            return -1;
+        });
+
         const tasksJSX = tasks.map((task) => {
-            return (<Task
-                key = { task.id }
-                { ...task }
-                _removeTask = { this._removeTask }
-            />);
+            return (
+                <Task
+                    key = { task.id }
+                    { ...task }
+                    _favoriteTask = { this._favoriteTask }
+                    _removeTask = { this._removeTask }
+                />
+            );
         });
 
         return (
@@ -109,7 +156,7 @@ export default class Scheduler extends Component {
                         </form>
                         <div>
                             <ul>
-                                <div style = { { position: "relative" } }>
+                                <div style = { { position: 'relative' } }>
                                     {tasksJSX}
                                 </div>
                             </ul>
@@ -120,7 +167,7 @@ export default class Scheduler extends Component {
                             <svg version = '1.1' viewBox = '0 0 27 27'>
                                 <g>
                                     <rect
-                                        fill = '#363636'
+                                        fill = '#fff'
                                         height = '25'
                                         rx = '5'
                                         ry = '5'
