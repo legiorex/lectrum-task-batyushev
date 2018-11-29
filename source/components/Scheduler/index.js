@@ -16,6 +16,7 @@ export default class Scheduler extends Component {
         this._createTask = this._createTask.bind(this);
         this._removeTask = this._removeTask.bind(this);
         this._favoriteTask = this._favoriteTask.bind(this);
+        this._completedTask = this._completedTask.bind(this);
     }
 
     state = {
@@ -23,13 +24,13 @@ export default class Scheduler extends Component {
             {
                 id:        '1',
                 message:   'Тестовая задача 1',
-                completed: true,
+                completed: false,
                 favorite:  false,
             },
             {
                 id:        '2',
                 message:   'Тестовая задача 2',
-                completed: true,
+                completed: false,
                 favorite:  false,
             },
             {
@@ -42,7 +43,7 @@ export default class Scheduler extends Component {
                 id:        '4',
                 message:   'Тестовая задача 4',
                 completed: false,
-                favorite:  true,
+                favorite:  false,
             }
         ],
         isSpinning: false,
@@ -113,24 +114,46 @@ export default class Scheduler extends Component {
             tasks: favoriteSetState,
         });
     }
+    _completedTask (id) {
+        const completedSetState = this.state.tasks.map((task) => {
+            if (task.id === id) {
+                if (task.completed === false) {
+                    return { ...task, completed: true };
+                }
+
+                return { ...task, completed: false };
+            }
+
+            return task;
+        });
+
+        this.setState({ tasks: completedSetState });
+    }
 
     render () {
         const { tasks, newMessage } = this.state;
 
         tasks.sort((a, b) => {
-            console.log(a.completed)
-            if (a.favorite < b.favorite) return 1; 
-            if (a.completed > b.completed) return 2;
-             return 0;
-                        
+
+            if (a.favorite < b.favorite) {
+                return 1;
+            }
+            if (a.completed > b.completed) {
+                return 2;
+            }
+
+            return 0;
+
         });
 
         const tasksJSX = tasks.map((task) => {
-            console.log(tasks);
+
+
             return (
                 <Task
                     key = { task.id }
                     { ...task }
+                    _completedTask = { this._completedTask }
                     _favoriteTask = { this._favoriteTask }
                     _removeTask = { this._removeTask }
                 />

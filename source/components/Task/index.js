@@ -9,7 +9,9 @@ export default class Task extends PureComponent {
         super();
         this._removeTask = this._removeTask.bind(this);
         this._favoriteTask = this._favoriteTask.bind(this);
+        this._completedTask = this._completedTask.bind(this);
         this._favoriteJSX = this._favoriteJSX.bind(this);
+        this._completedJSX = this._completedJSX.bind(this);
     }
 
     _getTaskShape = ({
@@ -35,9 +37,20 @@ export default class Task extends PureComponent {
 
         _favoriteTask(id);
     }
+    _completedJSX () {
+        const { completed } = this.props;
+
+        if (completed === false) {
+            
+
+            return '#FFF';
+        }
+
+        return '#3B8EF3';
+    }
 
     _favoriteJSX () {
-        const { favorite, id } = this.props;
+        const { favorite } = this.props;
 
         if (favorite === false) {
             return (
@@ -55,6 +68,11 @@ export default class Task extends PureComponent {
             />
         );
     }
+    _completedTask () {
+        const { _completedTask, id } = this.props;
+
+        _completedTask(id);
+    }
 
     render () {
         const { id, message, favorite, completed } = this.props;
@@ -63,6 +81,7 @@ export default class Task extends PureComponent {
             <li className = { Styles.task } key = { id }>
                 <div className = { Styles.content }>
                     <div
+                        onClick = { this._completedTask }
                         className = { Styles.toggleTaskCompletedState }
                         style = { {
                             width:   25,
@@ -75,7 +94,7 @@ export default class Task extends PureComponent {
                             viewBox = '0 0 27 27'>
                             <g>
                                 <rect
-                                    fill = '#FFF'
+                                    fill = { this._completedJSX() }
                                     height = '25'
                                     rx = '5'
                                     ry = '5'
