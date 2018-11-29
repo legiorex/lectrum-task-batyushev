@@ -25,7 +25,7 @@ export default class Scheduler extends Component {
                 id:        '1',
                 message:   'Тестовая задача 1',
                 completed: false,
-                favorite:  false,
+                favorite:  true,
             },
             {
                 id:        '2',
@@ -132,22 +132,16 @@ export default class Scheduler extends Component {
 
     render () {
         const { tasks, newMessage } = this.state;
+        // получаем массив с тасками с favorite === true и completed === false
+        const favorite = tasks.filter((task) => task.favorite && !task.completed);
+        
+        const usual = tasks.filter((task) => !task.favorite && !task.completed);
 
-        tasks.sort((a, b) => {
+        console.log(favorite);
 
-            if (a.favorite < b.favorite) {
-                return 1;
-            }
-            if (a.completed > b.completed) {
-                return 2;
-            }
-
-            return 0;
-
-        });
+       
 
         const tasksJSX = tasks.map((task) => {
-
 
             return (
                 <Task
