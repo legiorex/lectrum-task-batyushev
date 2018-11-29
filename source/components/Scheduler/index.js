@@ -23,13 +23,13 @@ export default class Scheduler extends Component {
             {
                 id:        '1',
                 message:   'Тестовая задача 1',
-                completed: false,
+                completed: true,
                 favorite:  false,
             },
             {
                 id:        '2',
                 message:   'Тестовая задача 2',
-                completed: false,
+                completed: true,
                 favorite:  false,
             },
             {
@@ -42,7 +42,7 @@ export default class Scheduler extends Component {
                 id:        '4',
                 message:   'Тестовая задача 4',
                 completed: false,
-                favorite:  false,
+                favorite:  true,
             }
         ],
         isSpinning: false,
@@ -118,14 +118,15 @@ export default class Scheduler extends Component {
         const { tasks, newMessage } = this.state;
 
         tasks.sort((a, b) => {
-            if (a.favorite < b.favorite) {
-                return 1;
-            }
-
-            return -1;
+            console.log(a.completed)
+            if (a.favorite < b.favorite) return 1; 
+            if (a.completed > b.completed) return 2;
+             return 0;
+                        
         });
 
         const tasksJSX = tasks.map((task) => {
+            console.log(tasks);
             return (
                 <Task
                     key = { task.id }
