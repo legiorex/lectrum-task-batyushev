@@ -1,5 +1,6 @@
 // Core
 import React, { PureComponent } from 'react';
+import moment from "moment";
 
 // Instruments
 import Styles from './styles.m.css';
@@ -75,49 +76,55 @@ export default class Task extends PureComponent {
     }
 
     render () {
-        const { id, message, favorite, completed } = this.props;
+        const { id, message, created } = this.props;
+        console.log(created);
 
         return (
             <li className = { Styles.task } key = { id }>
-                <div className = { Styles.content }>
-                    <div
-                        onClick = { this._completedTask }
-                        className = { Styles.toggleTaskCompletedState }
-                        style = { {
-                            width:   25,
-                            height:  25,
-                            display: 'inline-block',
-                        } }>
-                        <svg
-                            style = { { width: 25, height: 25, display: 'block' } }
-                            version = '1.1'
-                            viewBox = '0 0 27 27'>
-                            <g>
-                                <rect
-                                    fill = { this._completedJSX() }
-                                    height = '25'
-                                    rx = '5'
-                                    ry = '5'
-                                    stroke = '#3B8EF3'
-                                    style = { { strokeWidth: 2 } }
-                                    width = '25'
-                                    x = '1'
-                                    y = '1'
-                                />
-                                <path
-                                    d = 'M22.12 6c-3.12 3.16-6.84 6.36-10.23 9.64l-5.42-4.05L4 14.84l6.78 5.08L12.23 21l1.25-1.25C17 16.2 21.29 12.6 25 8.89z'
-                                    fill = '#FFF'
-                                />
-                            </g>
-                        </svg>
+            
+                    <div className={Styles.content}>
+                        <div
+                            onClick={this._completedTask}
+                            className={Styles.toggleTaskCompletedState}
+                            style={{
+                                width: 25,
+                                height: 25,
+                                display: 'inline-block',
+                            }}>
+                            <svg
+                                style={{ width: 25, height: 25, display: 'block' }}
+                                version='1.1'
+                                viewBox='0 0 27 27'>
+                                <g>
+                                    <rect
+                                        fill={this._completedJSX()}
+                                        height='25'
+                                        rx='5'
+                                        ry='5'
+                                        stroke='#3B8EF3'
+                                        style={{ strokeWidth: 2 }}
+                                        width='25'
+                                        x='1'
+                                        y='1'
+                                    />
+                                    <path
+                                        d='M22.12 6c-3.12 3.16-6.84 6.36-10.23 9.64l-5.42-4.05L4 14.84l6.78 5.08L12.23 21l1.25-1.25C17 16.2 21.29 12.6 25 8.89z'
+                                        fill='#FFF'
+                                    />
+                                </g>
+                            </svg>
+                        </div>
+                    <div>
+                        <input
+                            disabled=''
+                            maxLength='50'
+                            type='text'
+                            value={message}
+                        />
+                        <div className={Styles.timeTask}>{moment.unix(created).format('MMMM D h:mm:ss a')}</div>
                     </div>
-                    <input
-                        disabled = ''
-                        maxLength = '50'
-                        type = 'text'
-                        value = { message }
-                    />
-                </div>
+            </div>
+                
                 <div className = { Styles.actions }>
                     <div
                         className = { Styles.toggleTaskFavoriteState }
@@ -172,7 +179,9 @@ export default class Task extends PureComponent {
                             </g>
                         </svg>
                     </div>
+                    
                 </div>
+                
             </li>
         );
     }

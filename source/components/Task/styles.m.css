@@ -44,6 +44,7 @@
                 /* border-color: var(--paletteColor3); */
             }
         }
+        
     }
 
     & .actions {
@@ -81,3 +82,10 @@
         }
     }
 }
+.timeTask {
+            font-size: 10px;
+            padding-left: 14px;
+            color: var( --paletteColor9);
+            font-family: Verdana, Geneva, sans-serif;
+            font-weight: bold;
+        }

@@ -1,11 +1,12 @@
 // Core
 import React, { Component } from 'react';
+import moment from 'moment';
 
 import Task from '../Task';
 
 // Instruments
 import Styles from './styles.m.css';
-import { getUniqueID } from 'instruments';
+import { getUniqueID, sortTasksByGroup } from "instruments";
 import { api } from '../../REST'; // ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
 
 export default class Scheduler extends Component {
@@ -24,26 +25,30 @@ export default class Scheduler extends Component {
             {
                 id:        '1',
                 message:   'Тестовая задача 1',
-                completed: false,
+                completed: true,
                 favorite:  true,
+                created: 1543662272,
             },
             {
                 id:        '2',
                 message:   'Тестовая задача 2',
                 completed: false,
                 favorite:  false,
+                created: 1543662273,
             },
             {
                 id:        '3',
                 message:   'Тестовая задача 3',
-                completed: false,
+                completed: true,
                 favorite:  false,
+                created: 1543662274,
             },
             {
                 id:        '4',
                 message:   'Тестовая задача 4',
                 completed: false,
                 favorite:  false,
+                created: 1543662275,
             }
         ],
         isSpinning: false,
@@ -56,6 +61,7 @@ export default class Scheduler extends Component {
             message:   newMessage,
             completed: false,
             favorite:  false,
+            created: moment.utc(),
         };
 
         this.setState(({ tasks }) => ({
@@ -130,18 +136,13 @@ export default class Scheduler extends Component {
         this.setState({ tasks: completedSetState });
     }
 
+  
     render () {
-        const { tasks, newMessage } = this.state;
-        // получаем массив с тасками с favorite === true и completed === false
-        const favorite = tasks.filter((task) => task.favorite && !task.completed);
-        
-        const usual = tasks.filter((task) => !task.favorite && !task.completed);
-
-        console.log(favorite);
-
        
-
-        const tasksJSX = tasks.map((task) => {
+        const { tasks, newMessage } = this.state;
+        const sortTask = sortTasksByGroup(tasks);
+        
+        const tasksJSX = sortTask.map((task) => {
 
             return (
                 <Task
