@@ -144,29 +144,26 @@ export default class Scheduler extends Component {
     };
 
     _etidTask = (id) => {
-     
 
-        
-            this.state.tasks.map((task) => {
-            if(task.id === id) {
-                // console.log(task.message);
-            }
-        } )
+      
        
-        
-    }
-    _changeTaskValue = (id) => {
-        // const editMessage = this.state.tasks.map(task => {
-        //   if (task.id === id) {
-        //       task.message: message;
-        //     }
 
-          
-        // });
-
-        // this.setState({ tasks: completedSetState });
     }
-   
+    _onChangeTask = (id, event) => {
+        const editMessage = this.state.tasks.map((task) => {
+            if (task.id === id) {
+                return {...task, message: event.target.value} 
+            } 
+            return task;
+            
+        });
+
+        this.setState({ tasks: editMessage });
+        console.log(e.target.value);
+        console.log(id);
+        console.log(editMessage);
+    }
+
     render () {
         const { tasks, newMessage, searchTask } = this.state;
 
@@ -186,8 +183,8 @@ export default class Scheduler extends Component {
                     _completedTask = { this._completedTask }
                     _etidTask = { this._etidTask }
                     _favoriteTask = { this._favoriteTask }
+                    _onChangeTask = { this._onChangeTask }
                     _removeTask = { this._removeTask }
-                    _changeTaskValue = { this._changeTaskValue }
                 />
             );
         });
