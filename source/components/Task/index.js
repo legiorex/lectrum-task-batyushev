@@ -29,6 +29,28 @@ export default class Task extends PureComponent {
 
         _favoriteTask(id);
     };
+
+    _etidTask = () => {
+        // const { _etidTask, id } = this.props;
+        // console.log(e.target.value);
+        // message = e.target.value;
+
+        this.textInput.focus();
+       
+
+        // _etidTask(id);
+        
+    }
+
+    _changeTaskValue = ( message) => {
+        const { _changeTaskValue, id } = this.props;
+
+        console.log(message);
+        
+        _changeTaskValue(id);
+    }
+
+    
     _completedJSX = () => {
         const { completed } = this.props;
 
@@ -60,7 +82,7 @@ export default class Task extends PureComponent {
     };
     _completedTask = () => {
         const { _completedTask, id } = this.props;
-
+        
         _completedTask(id);
     };
 
@@ -103,6 +125,8 @@ export default class Task extends PureComponent {
                     </div>
                     <div>
                         <input
+                            onChange={this._changeTaskValue(message)}
+                            ref={(message) => { this.textInput = message; }}
                             disabled = ''
                             maxLength = '50'
                             type = 'text'
@@ -131,6 +155,7 @@ export default class Task extends PureComponent {
                         </svg>
                     </div>
                     <div
+                        onClick={this._etidTask}
                         className = { Styles.updateTaskMessageOnClick }
                         style = { {
                             width:   19,
