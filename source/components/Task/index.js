@@ -1,20 +1,11 @@
 // Core
-import React, { PureComponent } from 'react';
+import React, { PureComponent } from "react";
 import moment from "moment";
 
 // Instruments
-import Styles from './styles.m.css';
+import Styles from "./styles.m.css";
 
 export default class Task extends PureComponent {
-    constructor () {
-        super();
-        this._removeTask = this._removeTask.bind(this);
-        this._favoriteTask = this._favoriteTask.bind(this);
-        this._completedTask = this._completedTask.bind(this);
-        this._favoriteJSX = this._favoriteJSX.bind(this);
-        this._completedJSX = this._completedJSX.bind(this);
-    }
-
     _getTaskShape = ({
         id = this.props.id,
         completed = this.props.completed,
@@ -27,30 +18,28 @@ export default class Task extends PureComponent {
         message,
     });
 
-    _removeTask () {
+    _removeTask = () => {
         const { _removeTask, id } = this.props;
 
         _removeTask(id);
-    }
+    };
 
-    _favoriteTask () {
+    _favoriteTask = () => {
         const { _favoriteTask, id } = this.props;
 
         _favoriteTask(id);
-    }
-    _completedJSX () {
+    };
+    _completedJSX = () => {
         const { completed } = this.props;
 
         if (completed === false) {
-            
-
-            return '#FFF';
+            return "#FFF";
         }
 
-        return '#3B8EF3';
-    }
+        return "#3B8EF3";
+    };
 
-    _favoriteJSX () {
+    _favoriteJSX = () => {
         const { favorite } = this.props;
 
         if (favorite === false) {
@@ -68,63 +57,63 @@ export default class Task extends PureComponent {
                 fill = '#3B8EF3'
             />
         );
-    }
-    _completedTask () {
+    };
+    _completedTask = () => {
         const { _completedTask, id } = this.props;
 
         _completedTask(id);
-    }
+    };
 
     render () {
         const { id, message, created } = this.props;
-        console.log(created);
 
         return (
             <li className = { Styles.task } key = { id }>
-            
-                    <div className={Styles.content}>
-                        <div
-                            onClick={this._completedTask}
-                            className={Styles.toggleTaskCompletedState}
-                            style={{
-                                width: 25,
-                                height: 25,
-                                display: 'inline-block',
-                            }}>
-                            <svg
-                                style={{ width: 25, height: 25, display: 'block' }}
-                                version='1.1'
-                                viewBox='0 0 27 27'>
-                                <g>
-                                    <rect
-                                        fill={this._completedJSX()}
-                                        height='25'
-                                        rx='5'
-                                        ry='5'
-                                        stroke='#3B8EF3'
-                                        style={{ strokeWidth: 2 }}
-                                        width='25'
-                                        x='1'
-                                        y='1'
-                                    />
-                                    <path
-                                        d='M22.12 6c-3.12 3.16-6.84 6.36-10.23 9.64l-5.42-4.05L4 14.84l6.78 5.08L12.23 21l1.25-1.25C17 16.2 21.29 12.6 25 8.89z'
-                                        fill='#FFF'
-                                    />
-                                </g>
-                            </svg>
-                        </div>
+                <div className = { Styles.content }>
+                    <div
+                        onClick = { this._completedTask }
+                        className = { Styles.toggleTaskCompletedState }
+                        style = { {
+                            width:   25,
+                            height:  25,
+                            display: "inline-block",
+                        } }>
+                        <svg
+                            style = { { width: 25, height: 25, display: "block" } }
+                            version = '1.1'
+                            viewBox = '0 0 27 27'>
+                            <g>
+                                <rect
+                                    fill = { this._completedJSX() }
+                                    height = '25'
+                                    rx = '5'
+                                    ry = '5'
+                                    stroke = '#3B8EF3'
+                                    style = { { strokeWidth: 2 } }
+                                    width = '25'
+                                    x = '1'
+                                    y = '1'
+                                />
+                                <path
+                                    d = 'M22.12 6c-3.12 3.16-6.84 6.36-10.23 9.64l-5.42-4.05L4 14.84l6.78 5.08L12.23 21l1.25-1.25C17 16.2 21.29 12.6 25 8.89z'
+                                    fill = '#FFF'
+                                />
+                            </g>
+                        </svg>
+                    </div>
                     <div>
                         <input
-                            disabled=''
-                            maxLength='50'
-                            type='text'
-                            value={message}
+                            disabled = ''
+                            maxLength = '50'
+                            type = 'text'
+                            value = { message }
                         />
-                        <div className={Styles.timeTask}>{moment.unix(created).format('MMMM D h:mm:ss a')}</div>
+                        <div className = { Styles.timeTask }>
+                            {moment.unix(created).format("MMMM D h:mm:ss a")}
+                        </div>
                     </div>
-            </div>
-                
+                </div>
+
                 <div className = { Styles.actions }>
                     <div
                         className = { Styles.toggleTaskFavoriteState }
@@ -132,10 +121,10 @@ export default class Task extends PureComponent {
                         style = { {
                             width:   19,
                             height:  19,
-                            display: 'inline-block',
+                            display: "inline-block",
                         } }>
                         <svg
-                            style = { { width: 19, height: 19, display: 'block' } }
+                            style = { { width: 19, height: 19, display: "block" } }
                             version = '1.1'
                             viewBox = '0 0 90 85.8'>
                             <g>{this._favoriteJSX()}</g>
@@ -146,10 +135,10 @@ export default class Task extends PureComponent {
                         style = { {
                             width:   19,
                             height:  19,
-                            display: 'inline-block',
+                            display: "inline-block",
                         } }>
                         <svg
-                            style = { { width: 19, height: 19, display: 'block' } }
+                            style = { { width: 19, height: 19, display: "block" } }
                             version = '1.1'
                             viewBox = '0 0 21 21'>
                             <g>
@@ -165,10 +154,10 @@ export default class Task extends PureComponent {
                         style = { {
                             width:   17,
                             height:  17,
-                            display: 'inline-block',
+                            display: "inline-block",
                         } }>
                         <svg
-                            style = { { width: 17, height: 17, display: 'block' } }
+                            style = { { width: 17, height: 17, display: "block" } }
                             version = '1.1'
                             viewBox = '0 0 53.8 53.8'>
                             <g>
@@ -179,9 +168,7 @@ export default class Task extends PureComponent {
                             </g>
                         </svg>
                     </div>
-                    
                 </div>
-                
             </li>
         );
     }

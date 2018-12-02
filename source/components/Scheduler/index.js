@@ -1,67 +1,59 @@
 // Core
-import React, { Component } from 'react';
-import moment from 'moment';
+import React, { Component } from "react";
+import moment from "moment";
 
-import Task from '../Task';
+import Task from "../Task";
 
 // Instruments
-import Styles from './styles.m.css';
+import Styles from "./styles.m.css";
 import { getUniqueID, sortTasksByGroup } from "instruments";
-import { api } from '../../REST'; // ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
+import { api } from "../../REST"; // ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
 
 export default class Scheduler extends Component {
-    constructor () {
-        super();
-        this._updateMessage = this._updateMessage.bind(this);
-        this._handleFormSubmit = this._handleFormSubmit.bind(this);
-        this._createTask = this._createTask.bind(this);
-        this._removeTask = this._removeTask.bind(this);
-        this._favoriteTask = this._favoriteTask.bind(this);
-        this._completedTask = this._completedTask.bind(this);
-    }
-
     state = {
         tasks: [
             {
-                id:        '1',
-                message:   'Тестовая задача 1',
+                id:        "1",
+                message:   "Тестовая задача 1",
                 completed: true,
                 favorite:  true,
-                created: 1543662272,
+                created:   1543662272,
             },
             {
-                id:        '2',
-                message:   'Тестовая задача 2',
+                id:        "2",
+                message:   "Тестовая задача 2",
                 completed: false,
                 favorite:  false,
-                created: 1543662273,
+                created:   1543662273,
             },
             {
-                id:        '3',
-                message:   'Тестовая задача 3',
+                id:        "3",
+                message:   "Тестовая задача 3",
                 completed: true,
                 favorite:  false,
-                created: 1543662274,
+                created:   1543662274,
             },
             {
-                id:        '4',
-                message:   'Тестовая задача 4',
+                id:        "4",
+                message:   "Тестовая задача 4",
                 completed: false,
                 favorite:  false,
-                created: 1543662275,
+                created:   1543662275,
             }
         ],
         isSpinning: false,
-        newMessage: '',
+        newMessage: "",
+        searchTask: "",
     };
 
     _createTask = (newMessage) => {
         const task = {
-            id:        getUniqueID(),
-            message:   newMessage,
-            completed: false,
-            favorite:  false,
-            created: moment.utc(),
+            id:         getUniqueID(),
+            message:    newMessage,
+            completed:  false,
+            favorite:   false,
+            created:    moment.utc(),
+            searchTask: "",
         };
 
         this.setState(({ tasks }) => ({
@@ -70,16 +62,16 @@ export default class Scheduler extends Component {
         }));
     };
 
-    _updateMessage (event) {
+    _updateMessage = (event) => {
         this.setState({ newMessage: event.target.value });
-    }
+    };
 
-    _handleFormSubmit (event) {
+    _handleFormSubmit = (event) => {
         event.preventDefault();
         this._submitTask();
-    }
+    };
 
-    _submitTask () {
+    _submitTask = () => {
         const { newMessage } = this.state;
 
         if (!newMessage) {
@@ -87,17 +79,20 @@ export default class Scheduler extends Component {
         }
 
         this._createTask(newMessage);
-        this.setState({ newMessage: '' });
-    }
+        this.setState({
+            newMessage: "",
+            searchTask: "",
+        });
+    };
 
-    _removeTask (id) {
+    _removeTask = (id) => {
         const newTasks = this.state.tasks.filter((task) => {
             return task.id !== id;
         });
 
         this.setState({ tasks: newTasks });
-    }
-    _favoriteTask (id) {
+    };
+    _favoriteTask = (id) => {
         const favoriteSetState = this.state.tasks.map((task) => {
             if (task.id === id) {
                 if (task.favorite === false) {
@@ -119,8 +114,8 @@ export default class Scheduler extends Component {
         this.setState({
             tasks: favoriteSetState,
         });
-    }
-    _completedTask (id) {
+    };
+    _completedTask = (id) => {
         const completedSetState = this.state.tasks.map((task) => {
             if (task.id === id) {
                 if (task.completed === false) {
@@ -134,16 +129,32 @@ export default class Scheduler extends Component {
         });
 
         this.setState({ tasks: completedSetState });
-    }
+    };
+    _searchTask = (event) => {
+        event.preventDefault();
 
-  
+        this.setState({ searchTask: event.target.value });
+    };
+    _submitOnEnter = (event) => {
+        const enterKey = event.key === "Enter";
+
+        if (enterKey) {
+            event.preventDefault();
+        }
+    };
+
     render () {
-       
-        const { tasks, newMessage } = this.state;
-        const sortTask = sortTasksByGroup(tasks);
-        
-        const tasksJSX = sortTask.map((task) => {
+        const { tasks, newMessage, searchTask } = this.state;
 
+        const filterTask = tasks.filter((task) => { // поиск задач
+            return task.message
+                .toUpperCase()
+                .includes(searchTask.toUpperCase());
+        });
+
+        const sortTask = sortTasksByGroup(filterTask); // фильтрация задач
+
+        const tasksJSX = sortTask.map((task) => { // рендер массива задач и передача пропсов
             return (
                 <Task
                     key = { task.id }
@@ -160,7 +171,15 @@ export default class Scheduler extends Component {
                 <main>
                     <header>
                         <h1>Планировщик задач</h1>
-                        <input placeholder = 'Поиск' type = 'search' value = '' />
+                        <form onSubmit = { this._getResultSearch }>
+                            <input
+                                onChange = { this._searchTask }
+                                onKeyPress = { this._submitOnEnter }
+                                placeholder = 'Поиск'
+                                type = 'search'
+                                value = { searchTask }
+                            />
+                        </form>
                     </header>
                     <section>
                         <form onSubmit = { this._handleFormSubmit }>
@@ -175,7 +194,7 @@ export default class Scheduler extends Component {
                         </form>
                         <div>
                             <ul>
-                                <div style = { { position: 'relative' } }>
+                                <div style = { { position: "relative" } }>
                                     {tasksJSX}
                                 </div>
                             </ul>

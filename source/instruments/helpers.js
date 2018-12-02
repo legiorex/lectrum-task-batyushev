@@ -35,10 +35,9 @@ export const sortTasksByDate = (tasks) => {
 };
 
 export const sortTasksByGroup = (tasks) => {
-    
     // получаем массив с тасками с favorite === true и completed === false
     const favorite = tasks.filter((task) => task.favorite && !task.completed);
-     // получаем массив с тасками с favorite === false и completed === false
+    // получаем массив с тасками с favorite === false и completed === false
     const usual = tasks.filter((task) => !task.favorite && !task.completed);
     // получаем массив с тасками completed === true и сортировка по времени создания
     const completed = sortTasksByDate(tasks.filter((task) => task.completed));
