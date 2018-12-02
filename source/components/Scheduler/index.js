@@ -22,7 +22,7 @@ export default class Scheduler extends Component {
             {
                 id:        "2",
                 message:   "Тестовая задача 2",
-                completed: false,
+                completed: true,
                 favorite:  false,
                 created:   1543662273,
             },
@@ -36,7 +36,7 @@ export default class Scheduler extends Component {
             {
                 id:        "4",
                 message:   "Тестовая задача 4",
-                completed: false,
+                completed: true,
                 favorite:  false,
                 created:   1543662275,
             }
@@ -142,6 +142,14 @@ export default class Scheduler extends Component {
             event.preventDefault();
         }
     };
+    _completedTaskAll = () => {
+        const completedTask = this.state.tasks.map((task) => {
+            return { ...task, completed: true };
+
+        });
+
+        this.setState({ tasks: completedTask });
+    }
 
     render () {
         const { tasks, newMessage, searchTask } = this.state;
@@ -165,6 +173,11 @@ export default class Scheduler extends Component {
                 />
             );
         });
+
+        const completedJSX =  tasks.every((task) => {
+            return task.completed;
+
+        }) ? '#363636' : "#fff";
 
         return (
             <section className = { Styles.scheduler }>
@@ -202,10 +215,13 @@ export default class Scheduler extends Component {
                     </section>
                     <footer>
                         <div>
-                            <svg version = '1.1' viewBox = '0 0 27 27'>
+                            <svg
+                                onClick = { this._completedTaskAll }
+                                version = '1.1' viewBox = '0 0 27 27'>
                                 <g>
                                     <rect
-                                        fill = '#fff'
+
+                                        fill = { completedJSX }
                                         height = '25'
                                         rx = '5'
                                         ry = '5'
@@ -221,7 +237,9 @@ export default class Scheduler extends Component {
                                 </g>
                             </svg>
                         </div>
-                        <span className = { Styles.completeAllTasks }>
+                        <span
+
+                            className = { Styles.completeAllTasks }>
                             Все задачи выполнены
                         </span>
                     </footer>
