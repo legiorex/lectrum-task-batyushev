@@ -151,6 +151,27 @@ export default class Scheduler extends Component {
         this.setState({ tasks: completedTask });
     }
 
+    _etidTask = (id) => {
+
+      
+       
+
+    }
+    _onChangeTask = (id, event) => {
+        const editMessage = this.state.tasks.map((task) => {
+            if (task.id === id) {
+                return {...task, message: event.target.value} 
+            } 
+            return task;
+            
+        });
+
+        this.setState({ tasks: editMessage });
+        console.log(e.target.value);
+        console.log(id);
+        console.log(editMessage);
+    }
+
     render () {
         const { tasks, newMessage, searchTask } = this.state;
 
@@ -168,7 +189,9 @@ export default class Scheduler extends Component {
                     key = { task.id }
                     { ...task }
                     _completedTask = { this._completedTask }
+                    _etidTask = { this._etidTask }
                     _favoriteTask = { this._favoriteTask }
+                    _onChangeTask = { this._onChangeTask }
                     _removeTask = { this._removeTask }
                 />
             );
@@ -184,15 +207,15 @@ export default class Scheduler extends Component {
                 <main>
                     <header>
                         <h1>Планировщик задач</h1>
-                        <form onSubmit = { this._getResultSearch }>
-                            <input
-                                onChange = { this._searchTask }
-                                onKeyPress = { this._submitOnEnter }
-                                placeholder = 'Поиск'
-                                type = 'search'
-                                value = { searchTask }
-                            />
-                        </form>
+
+                        <input
+                            onChange = { this._searchTask }
+                            onKeyPress = { this._submitOnEnter }
+                            placeholder = 'Поиск'
+                            type = 'search'
+                            value = { searchTask }
+                        />
+
                     </header>
                     <section>
                         <form onSubmit = { this._handleFormSubmit }>
