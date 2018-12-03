@@ -45,7 +45,7 @@ export default class Scheduler extends Component {
         newMessage: '',
         searchTask: '',
     };
-    componentDidMount(){
+    componentDidMount () {
         this._fetchTasks();
     }
 
@@ -54,15 +54,13 @@ export default class Scheduler extends Component {
             method: 'GET',
         });
         // console.log(response.json());
-        const {data: tasks} = await response.json();
+        const { data: tasks } = await response.json();
 
         this.setState({
             tasks,
             isSpinning: false,
         });
-        
 
-        
     };
 
     // _createTask = (newMessage) => {
@@ -82,7 +80,7 @@ export default class Scheduler extends Component {
     // };
 
     _createTask = async (newMessage) => {
-            const task = {
+        const task = {
             id:         getUniqueID(),
             message:    newMessage,
             completed:  false,
@@ -91,15 +89,16 @@ export default class Scheduler extends Component {
             searchTask: '',
         };
 
-        const response = await fetch( api, {
-            method: 'POST',
+        const response = await fetch(api, {
+            method:  'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: TOKEN,
+                Authorization:  TOKEN,
             },
-            body: JSON.stringify({task})
+            body: JSON.stringify({ task }),
         });
-        const {data: tasks} = await response.json();
+        const { data: tasks } = await response.json();
+
         this.setState(({ tasks }) => ({
             tasks:      [task, ...tasks],
             isSpinning: false,
@@ -193,7 +192,8 @@ export default class Scheduler extends Component {
         this.setState({ tasks: completedTask });
     };
 
-    _etidTask = (id) => {};
+    // _etidTask = (id) => { };
+
     _onChangeTask = (id, event) => {
         const editMessage = this.state.tasks.map((task) => {
             if (task.id === id) {
@@ -228,7 +228,7 @@ export default class Scheduler extends Component {
                     key = { task.id }
                     { ...task }
                     _completedTask = { this._completedTask }
-                    _etidTask = { this._etidTask }
+
                     _favoriteTask = { this._favoriteTask }
                     _onChangeTask = { this._onChangeTask }
                     _removeTask = { this._removeTask }
