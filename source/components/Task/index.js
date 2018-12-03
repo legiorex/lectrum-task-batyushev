@@ -1,11 +1,12 @@
 // Core
-import React, { PureComponent } from "react";
+import React, { PureComponent, createRef } from "react";
 import moment from "moment";
 
 // Instruments
 import Styles from "./styles.m.css";
 
 export default class Task extends PureComponent {
+    taskInput = createRef();
     _getTaskShape = ({
         id = this.props.id,
         completed = this.props.completed,
@@ -31,14 +32,12 @@ export default class Task extends PureComponent {
     };
 
     _etidTask = () => {
-        let { _etidTask, id} = this.props;
-        
-       
-        this.textInput.focus();      
-        _etidTask(id);        
+        const { _etidTask, id } = this.props;
+
+        this.textInput.focus();
+        _etidTask(id);
     }
 
-      
     _completedJSX = () => {
         const { completed } = this.props;
 
@@ -70,13 +69,14 @@ export default class Task extends PureComponent {
     };
     _completedTask = () => {
         const { _completedTask, id } = this.props;
-        
+
         _completedTask(id);
     };
     _onChangeTask = (event) => {
-        const { _onChangeTask, id} = this.props;
-        _onChangeTask(id, event)
-        
+        const { _onChangeTask, id } = this.props;
+
+        _onChangeTask(id, event);
+
     }
 
     render () {
@@ -118,9 +118,9 @@ export default class Task extends PureComponent {
                     </div>
                     <div>
                         <input
-                            onChange={this._onChangeTask}
-                            ref={(input) => { this.textInput = input; }}
-                            disabled = ''
+                            onChange = { this._onChangeTask }
+                            ref = { this.taskInput }
+                            disabled = 'disabled'
                             maxLength = '50'
                             type = 'text'
                             value = { message }
@@ -148,7 +148,7 @@ export default class Task extends PureComponent {
                         </svg>
                     </div>
                     <div
-                        onClick={this._etidTask}
+                        onClick = { this._etidTask }
                         className = { Styles.updateTaskMessageOnClick }
                         style = { {
                             width:   19,

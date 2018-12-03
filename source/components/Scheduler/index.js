@@ -161,7 +161,7 @@ export default class Scheduler extends Component {
     _completedTask = (id) => {
         const completedSetState = this.state.tasks.map((task) => {
             if (task.id === id) {
-                if (task.completed === false) {
+                if (!task.completed) {
                     return { ...task, completed: true };
                 }
 
