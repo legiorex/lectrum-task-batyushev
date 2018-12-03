@@ -4,6 +4,7 @@ import moment from "moment";
 
 // Instruments
 import Styles from "./styles.m.css";
+import Checkbox from '../../theme/assets/Checkbox';
 
 export default class Task extends PureComponent {
     taskInput = createRef();
@@ -39,7 +40,7 @@ export default class Task extends PureComponent {
     _editTask = () => {
 
         const { isEditing } = this.state;
-        
+
         if (!isEditing) {
 
             return this.setState({ isEditing: true });
@@ -88,13 +89,13 @@ export default class Task extends PureComponent {
         const { _onChangeTask, id } = this.props;
 
         _onChangeTask(id, event);
-        let { message } = this.props;
+        const { message } = this.props;
         const { editMessage } = this.state;
 
         this.setState({ editMessage: event.target.value });
-        
+
         // this.taskInput.focus();
-        
+
         console.log(message);
 
         // _onChangeTask(id, event);
@@ -106,8 +107,8 @@ export default class Task extends PureComponent {
         const { isEditing, editMessage } = this.state;
 
         console.log(message);
-        console.log('пустая строка'+ editMessage);
-
+        console.log(`пустая строка${editMessage}`);
+        console.log(Checkbox);
         const messageTask = () => {
             if (!editMessage) {
                 return message;
@@ -119,7 +120,13 @@ export default class Task extends PureComponent {
         return (
             <li className = { Styles.task } key = { id }>
                 <div className = { Styles.content }>
-                    <div
+                    <Checkbox
+                        onClick = { this._completedTask }
+                        className = { Styles.toggleTaskCompletedState }
+                        color1 = '#3B8EF3'
+                        color2 = '#FFF'
+                    />
+                    {/* <div
                         onClick = { this._completedTask }
                         className = { Styles.toggleTaskCompletedState }
                         style = { {
@@ -149,7 +156,7 @@ export default class Task extends PureComponent {
                                 />
                             </g>
                         </svg>
-                    </div>
+                    </div> */}
                     <div>
                         <input
                             onChange = { this._onChangeTask }
