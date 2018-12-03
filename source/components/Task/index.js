@@ -1,11 +1,12 @@
 // Core
-import React, { PureComponent } from "react";
+import React, { PureComponent, createRef } from "react";
 import moment from "moment";
 
 // Instruments
 import Styles from "./styles.m.css";
 
 export default class Task extends PureComponent {
+    taskInput = createRef();
     _getTaskShape = ({
         id = this.props.id,
         completed = this.props.completed,
@@ -17,6 +18,11 @@ export default class Task extends PureComponent {
         favorite,
         message,
     });
+
+    state = {
+        isEditing:   false,
+        editMessage: '',
+    }
 
     _removeTask = () => {
         const { _removeTask, id } = this.props;
@@ -30,15 +36,20 @@ export default class Task extends PureComponent {
         _favoriteTask(id);
     };
 
-    _etidTask = () => {
-        let { _etidTask, id} = this.props;
+    _editTask = () => {
+
+        const { isEditing } = this.state;
         
-       
-        this.textInput.focus();      
-        _etidTask(id);        
+        if (!isEditing) {
+
+            return this.setState({ isEditing: true });
+
+        }
+
+        return this.setState({ isEditing: false });
+
     }
 
-      
     _completedJSX = () => {
         const { completed } = this.props;
 
@@ -70,17 +81,37 @@ export default class Task extends PureComponent {
     };
     _completedTask = () => {
         const { _completedTask, id } = this.props;
-        
+
         _completedTask(id);
     };
     _onChangeTask = (event) => {
-        const { _onChangeTask, id} = this.props;
-        _onChangeTask(id, event)
+        let { message } = this.props;
+        const { editMessage } = this.state;
+
+        this.setState({ editMessage: event.target.value });
         
+        // this.taskInput.focus();
+        
+        console.log(message);
+
+        // _onChangeTask(id, event);
+
     }
 
     render () {
         const { id, message, created } = this.props;
+        const { isEditing, editMessage } = this.state;
+
+        console.log(message);
+        console.log('пустая строка'+ editMessage);
+
+        const messageTask = () => {
+            if (!editMessage) {
+                return message;
+            }
+
+            return editMessage;
+        };
 
         return (
             <li className = { Styles.task } key = { id }>
@@ -118,12 +149,12 @@ export default class Task extends PureComponent {
                     </div>
                     <div>
                         <input
-                            onChange={this._onChangeTask}
-                            ref={(input) => { this.textInput = input; }}
-                            disabled = ''
+                            onChange = { this._onChangeTask }
+                            ref = { this.taskInput }
+                            disabled = { !isEditing }
                             maxLength = '50'
                             type = 'text'
-                            value = { message }
+                            value = { messageTask() }
                         />
                         <div className = { Styles.timeTask }>
                             {moment.unix(created).format("MMMM D h:mm:ss a")}
@@ -148,7 +179,7 @@ export default class Task extends PureComponent {
                         </svg>
                     </div>
                     <div
-                        onClick={this._etidTask}
+                        onClick = { this._editTask }
                         className = { Styles.updateTaskMessageOnClick }
                         style = { {
                             width:   19,

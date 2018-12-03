@@ -143,12 +143,7 @@ export default class Scheduler extends Component {
         }
     };
 
-    _etidTask = (id) => {
 
-      
-       
-
-    }
     _onChangeTask = (id, event) => {
         const editMessage = this.state.tasks.map((task) => {
             if (task.id === id) {
@@ -181,7 +176,7 @@ export default class Scheduler extends Component {
                     key = { task.id }
                     { ...task }
                     _completedTask = { this._completedTask }
-                    _etidTask = { this._etidTask }
+                    
                     _favoriteTask = { this._favoriteTask }
                     _onChangeTask = { this._onChangeTask }
                     _removeTask = { this._removeTask }
