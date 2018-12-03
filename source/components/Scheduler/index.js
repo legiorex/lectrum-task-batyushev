@@ -1,67 +1,110 @@
 // Core
-import React, { Component } from "react";
-import moment from "moment";
+import React, { Component } from 'react';
+import moment from 'moment';
 
-import Task from "../Task";
+import Task from '../Task';
 
 // Instruments
-import Styles from "./styles.m.css";
-import { getUniqueID, sortTasksByGroup } from "instruments";
-import { api } from "../../REST"; // ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
+import Styles from './styles.m.css';
+import { getUniqueID, sortTasksByGroup } from 'instruments';
+import { api, TOKEN } from '../../REST'; // ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
 
 export default class Scheduler extends Component {
     state = {
         tasks: [
             {
-                id:        "1",
-                message:   "Тестовая задача 1",
+                id:        '1',
+                message:   'Тестовая задача 1',
                 completed: true,
                 favorite:  true,
                 created:   1543662272,
             },
             {
-                id:        "2",
-                message:   "Тестовая задача 2",
+                id:        '2',
+                message:   'Тестовая задача 2',
                 completed: true,
                 favorite:  false,
                 created:   1543662273,
             },
             {
-                id:        "3",
-                message:   "Тестовая задача 3",
+                id:        '3',
+                message:   'Тестовая задача 3',
                 completed: true,
                 favorite:  false,
                 created:   1543662274,
             },
             {
-                id:        "4",
-                message:   "Тестовая задача 4",
+                id:        '4',
+                message:   'Тестовая задача 4',
                 completed: true,
                 favorite:  false,
                 created:   1543662275,
             }
         ],
         isSpinning: false,
-        newMessage: "",
-        searchTask: "",
+        newMessage: '',
+        searchTask: '',
+    };
+    componentDidMount(){
+        this._fetchTasks();
+    }
+
+    _fetchTasks = async () => {
+        const response = await fetch(api, {
+            method: 'GET',
+        });
+        // console.log(response.json());
+        const {data: tasks} = await response.json();
+
+        this.setState({
+            tasks,
+            isSpinning: false,
+        });
+        
+
+        
     };
 
-    _createTask = (newMessage) => {
-        const task = {
+    // _createTask = (newMessage) => {
+    //     const task = {
+    //         id:         getUniqueID(),
+    //         message:    newMessage,
+    //         completed:  false,
+    //         favorite:   false,
+    //         created:    moment.utc(),
+    //         searchTask: '',
+    //     };
+
+    //     this.setState(({ tasks }) => ({
+    //         tasks:      [task, ...tasks],
+    //         isSpinning: false,
+    //     }));
+    // };
+
+    _createTask = async (newMessage) => {
+            const task = {
             id:         getUniqueID(),
             message:    newMessage,
             completed:  false,
             favorite:   false,
             created:    moment.utc(),
-            searchTask: "",
+            searchTask: '',
         };
 
+        const response = await fetch( api, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: TOKEN,
+            },
+            body: JSON.stringify({task})
+        });
+        const {data: tasks} = await response.json();
         this.setState(({ tasks }) => ({
             tasks:      [task, ...tasks],
             isSpinning: false,
         }));
     };
-
     _updateMessage = (event) => {
         this.setState({ newMessage: event.target.value });
     };
@@ -80,8 +123,8 @@ export default class Scheduler extends Component {
 
         this._createTask(newMessage);
         this.setState({
-            newMessage: "",
-            searchTask: "",
+            newMessage: '',
+            searchTask: '',
         });
     };
 
@@ -136,7 +179,7 @@ export default class Scheduler extends Component {
         this.setState({ searchTask: event.target.value });
     };
     _submitOnEnter = (event) => {
-        const enterKey = event.key === "Enter";
+        const enterKey = event.key === 'Enter';
 
         if (enterKey) {
             event.preventDefault();
@@ -145,37 +188,32 @@ export default class Scheduler extends Component {
     _completedTaskAll = () => {
         const completedTask = this.state.tasks.map((task) => {
             return { ...task, completed: true };
-
         });
 
         this.setState({ tasks: completedTask });
-    }
+    };
 
-    _etidTask = (id) => {
-
-      
-       
-
-    }
+    _etidTask = (id) => {};
     _onChangeTask = (id, event) => {
         const editMessage = this.state.tasks.map((task) => {
             if (task.id === id) {
-                return {...task, message: event.target.value} 
-            } 
+                return { ...task, message: event.target.value };
+            }
+
             return task;
-            
         });
 
         this.setState({ tasks: editMessage });
         console.log(e.target.value);
         console.log(id);
         console.log(editMessage);
-    }
+    };
 
     render () {
         const { tasks, newMessage, searchTask } = this.state;
 
-        const filterTask = tasks.filter((task) => { // поиск задач
+        const filterTask = tasks.filter((task) => {
+            // поиск задач
             return task.message
                 .toUpperCase()
                 .includes(searchTask.toUpperCase());
@@ -183,7 +221,8 @@ export default class Scheduler extends Component {
 
         const sortTask = sortTasksByGroup(filterTask); // фильтрация задач
 
-        const tasksJSX = sortTask.map((task) => { // рендер массива задач и передача пропсов
+        const tasksJSX = sortTask.map((task) => {
+            // рендер массива задач и передача пропсов
             return (
                 <Task
                     key = { task.id }
@@ -197,10 +236,11 @@ export default class Scheduler extends Component {
             );
         });
 
-        const completedJSX =  tasks.every((task) => {
+        const completedJSX = tasks.every((task) => {
             return task.completed;
-
-        }) ? '#363636' : "#fff";
+        })
+            ? '#363636'
+            : '#fff';
 
         return (
             <section className = { Styles.scheduler }>
@@ -215,7 +255,6 @@ export default class Scheduler extends Component {
                             type = 'search'
                             value = { searchTask }
                         />
-
                     </header>
                     <section>
                         <form onSubmit = { this._handleFormSubmit }>
@@ -230,7 +269,7 @@ export default class Scheduler extends Component {
                         </form>
                         <div>
                             <ul>
-                                <div style = { { position: "relative" } }>
+                                <div style = { { position: 'relative' } }>
                                     {tasksJSX}
                                 </div>
                             </ul>
@@ -240,10 +279,10 @@ export default class Scheduler extends Component {
                         <div>
                             <svg
                                 onClick = { this._completedTaskAll }
-                                version = '1.1' viewBox = '0 0 27 27'>
+                                version = '1.1'
+                                viewBox = '0 0 27 27'>
                                 <g>
                                     <rect
-
                                         fill = { completedJSX }
                                         height = '25'
                                         rx = '5'
@@ -260,9 +299,7 @@ export default class Scheduler extends Component {
                                 </g>
                             </svg>
                         </div>
-                        <span
-
-                            className = { Styles.completeAllTasks }>
+                        <span className = { Styles.completeAllTasks }>
                             Все задачи выполнены
                         </span>
                     </footer>
