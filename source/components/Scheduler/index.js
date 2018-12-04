@@ -9,6 +9,8 @@ import Styles from './styles.m.css';
 import { getUniqueID, sortTasksByGroup } from 'instruments';
 import { api, TOKEN } from '../../REST'; // ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
 
+// Components
+import Checkbox from '../../theme/assets/Checkbox';
 export default class Scheduler extends Component {
     state = {
         tasks: [
@@ -60,7 +62,6 @@ export default class Scheduler extends Component {
             tasks,
             isSpinning: false,
         });
-
     };
 
     // _createTask = (newMessage) => {
@@ -190,24 +191,7 @@ export default class Scheduler extends Component {
         });
 
         this.setState({ tasks: completedTask });
-    };
-
-    // _etidTask = (id) => { };
-
-    _onChangeTask = (id, event) => {
-        const editMessage = this.state.tasks.map((task) => {
-            if (task.id === id) {
-                return { ...task, message: event.target.value };
-            }
-
-            return task;
-        });
-
-        this.setState({ tasks: editMessage });
-        console.log(e.target.value);
-        console.log(id);
-        console.log(editMessage);
-    };
+    };    
 
     render () {
         const { tasks, newMessage, searchTask } = this.state;
@@ -228,19 +212,15 @@ export default class Scheduler extends Component {
                     key = { task.id }
                     { ...task }
                     _completedTask = { this._completedTask }
-
-                    _favoriteTask = { this._favoriteTask }
-                    _onChangeTask = { this._onChangeTask }
+                    _favoriteTask = { this._favoriteTask }                    
                     _removeTask = { this._removeTask }
                 />
             );
         });
 
-        const completedJSX = tasks.every((task) => {
+        const completed = tasks.every((task) => {
             return task.completed;
-        })
-            ? '#363636'
-            : '#fff';
+        });
 
         return (
             <section className = { Styles.scheduler }>
@@ -276,29 +256,13 @@ export default class Scheduler extends Component {
                         </div>
                     </section>
                     <footer>
-                        <div>
-                            <svg
-                                onClick = { this._completedTaskAll }
-                                version = '1.1'
-                                viewBox = '0 0 27 27'>
-                                <g>
-                                    <rect
-                                        fill = { completedJSX }
-                                        height = '25'
-                                        rx = '5'
-                                        ry = '5'
-                                        stroke = '#363636'
-                                        width = '25'
-                                        x = '1'
-                                        y = '1'
-                                    />
-                                    <path
-                                        d = 'M22.12 6c-3.12 3.16-6.84 6.36-10.23 9.64l-5.42-4.05L4 14.84l6.78 5.08L12.23 21l1.25-1.25C17 16.2 21.29 12.6 25 8.89z'
-                                        fill = '#fff'
-                                    />
-                                </g>
-                            </svg>
-                        </div>
+                        <Checkbox
+                            onClick = { this._completedTaskAll }
+                            inlineBlock
+                            checked = { completed }
+                            color1 = '#363636'
+                            color2 = '#FFF'
+                        />
                         <span className = { Styles.completeAllTasks }>
                             Все задачи выполнены
                         </span>
