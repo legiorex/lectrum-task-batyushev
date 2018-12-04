@@ -28,30 +28,32 @@ export default class Scheduler extends Component {
     };
     componentDidMount () {
         this._fetchTasks();
-
-
-
-        
-        
-        console.log(api._fetchTasks())
     }
-
     _fetchTasks = async () => {
-        const response = await fetch(api.url, {
-            method:  "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization:  api.token,
-            },
-        });
-
-        const { data: tasks } = await response.json();
+        const tasks = await api.fetchTasks();
 
         this.setState({
             tasks,
             isSpinning: false,
         });
     };
+
+    // _fetchTasks = async () => {
+    //     const response = await fetch(api.url, {
+    //         method:  "GET",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             Authorization:  api.token,
+    //         },
+    //     });
+
+    //     const { data: tasks } = await response.json();
+
+    //     this.setState({
+    //         tasks,
+    //         isSpinning: false,
+    //     });
+    // };
 
     // _createTask = (newMessage) => {
     //     const task = {

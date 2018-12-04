@@ -15,7 +15,7 @@ export const api = {
         });
     },
 
-    async _fetchTasks () {
+    async fetchTasks () {
          const response = await fetch(MAIN_URL, {
             method:  "GET",
             headers: {
