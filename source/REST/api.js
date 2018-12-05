@@ -1,9 +1,44 @@
 import { MAIN_URL, TOKEN } from './config';
 export const api = {
-    url:   MAIN_URL,
-    token: TOKEN,
 
-    async _updateTask (updateTask) {
+    async fetchTasks () {
+        const response = await fetch(MAIN_URL, {
+            method:  "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization:  TOKEN,
+            },
+        });
+
+        const { data: task } = await response.json();
+
+        return task;
+    },
+    async createTask (newMessage) {
+
+        const response = await fetch(MAIN_URL, {
+            method:  "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization:  TOKEN,
+            },
+            body: JSON.stringify({ message: newMessage }),
+        });
+        const { data: task } = await response.json();
+
+        return task;
+    },
+
+    async removeTask (id) {
+
+        await fetch(`${MAIN_URL}/${id}`, {
+            method:  "DELETE",
+            headers: {
+                Authorization: TOKEN,
+            },
+        });
+    },
+    async updateTask (updateTask) {
 
         await fetch(MAIN_URL, {
             method:  "PUT",
@@ -15,39 +50,4 @@ export const api = {
         });
     },
 
-    async fetchTasks () {
-         const response = await fetch(MAIN_URL, {
-            method:  "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization:  TOKEN,
-            },
-        });
-        // console.log(await response.json());
-        const { data: task } = await response.json();
-        
-        return task
-    },
-
-    
-
-    // async _createTask (newMessage) {
-    //     console.log(newMessage);
-    //     const response = await fetch(MAIN_URL, {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //             Authorization: TOKEN,
-    //         },
-    //         body: JSON.stringify({ message: newMessage }),
-    //     });
-    //     const { data: task } = await response.json();
-
-    //     return task
-
-    //     // this.setState(({ tasks }) => ({
-    //     //     tasks: [task, ...tasks],
-    //     //     isSpinning: false,
-    //     // }));
-    // },
-}; 
+};

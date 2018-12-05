@@ -38,23 +38,6 @@ export default class Scheduler extends Component {
         });
     };
 
-    // _fetchTasks = async () => {
-    //     const response = await fetch(api.url, {
-    //         method:  "GET",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //             Authorization:  api.token,
-    //         },
-    //     });
-
-    //     const { data: tasks } = await response.json();
-
-    //     this.setState({
-    //         tasks,
-    //         isSpinning: false,
-    //     });
-    // };
-
     // _createTask = (newMessage) => {
     //     const task = {
     //         id:         getUniqueID(),
@@ -73,16 +56,7 @@ export default class Scheduler extends Component {
 
     _createTask = async (newMessage) => {
 
-        const response = await fetch(api.url, {
-            method:  "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization:  api.token,
-            },
-            body: JSON.stringify({ message: newMessage }),
-        });
-        const { data: task } = await response.json();
-
+        const task = await api.createTask(newMessage);
 
         this.setState(({ tasks }) => ({
             tasks:      [task, ...tasks],
@@ -108,7 +82,6 @@ export default class Scheduler extends Component {
 
         this._createTask(newMessage);
 
-
         this.setState({
             newMessage: '',
             searchTask: '',
@@ -117,12 +90,8 @@ export default class Scheduler extends Component {
 
     _removeTask = async (id) => {
 
-        await fetch(`${api.url}/${id}`, {
-            method:  "DELETE",
-            headers: {
-                Authorization: api.token,
-            },
-        });
+        await api.removeTask(id);
+
         const newTasks = this.state.tasks.filter((task) => {
             return task.id !== id;
         });
@@ -130,7 +99,7 @@ export default class Scheduler extends Component {
         this.setState({ tasks: newTasks });
     };
 
-    _favoriteTask = (id) => {
+    _favoriteTask = async (id) => {
         const favoriteSetState = this.state.tasks.map((task) => {
             if (task.id === id) {
                 if (task.favorite === false) {
@@ -154,10 +123,10 @@ export default class Scheduler extends Component {
         });
         const updateTask = favoriteSetState;
 
-        api._updateTask(updateTask);
+        await api.updateTask(updateTask);
 
     };
-    _completedTask = (id) => {
+    _completedTask = async (id) => {
         const completedSetState = this.state.tasks.map((task) => {
             if (task.id === id) {
                 if (!task.completed) {
@@ -173,7 +142,7 @@ export default class Scheduler extends Component {
         this.setState({ tasks: completedSetState });
         const updateTask = completedSetState;
 
-        api._updateTask(updateTask);
+        await api.updateTask(updateTask);
     };
     _searchTask = (event) => {
         event.preventDefault();
@@ -187,7 +156,7 @@ export default class Scheduler extends Component {
             event.preventDefault();
         }
     };
-    _completedTaskAll = () => {
+    _completedTaskAll = async () => {
         const completedTask = this.state.tasks.map((task) => {
             return { ...task, completed: true };
         });
@@ -195,12 +164,11 @@ export default class Scheduler extends Component {
         this.setState({ tasks: completedTask });
         const updateTask = completedTask;
 
-        api._updateTask(updateTask);
+        await api.updateTask(updateTask);
     };
 
     render () {
         const { tasks, newMessage, searchTask } = this.state;
-
 
         const filterTask = tasks.filter((task) => {
             // поиск задач
