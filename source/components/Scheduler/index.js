@@ -27,9 +27,9 @@ export default class Scheduler extends Component {
         searchTask: '',
     };
     componentDidMount () {
-        this._fetchTasks();
+        this._fetchTasksAsync();
     }
-    _fetchTasks = async () => {
+    _fetchTasksAsync = async () => {
         const tasks = await api.fetchTasks();
 
         this.setState({
@@ -54,7 +54,7 @@ export default class Scheduler extends Component {
     //     }));
     // };
 
-    _createTask = async (newMessage) => {
+    _createTaskAsync = async (newMessage) => {
 
         const task = await api.createTask(newMessage);
 
@@ -64,7 +64,7 @@ export default class Scheduler extends Component {
         }));
     };
 
-    _updateMessage = (event) => {
+    _updateNewTaskMessage = (event) => {
         this.setState({ newMessage: event.target.value });
     };
 
@@ -80,7 +80,7 @@ export default class Scheduler extends Component {
             return null;
         }
 
-        this._createTask(newMessage);
+        this._createTaskAsync(newMessage);
 
         this.setState({
             newMessage: '',
@@ -88,7 +88,7 @@ export default class Scheduler extends Component {
         });
     };
 
-    _removeTask = async (id) => {
+    _removeTaskAsync = async (id) => {
 
         await api.removeTask(id);
 
@@ -144,7 +144,7 @@ export default class Scheduler extends Component {
 
         await api.updateTask(updateTask);
     };
-    _searchTask = (event) => {
+    _updateTasksFilter = (event) => {
         event.preventDefault();
 
         this.setState({ searchTask: event.target.value });
@@ -156,7 +156,7 @@ export default class Scheduler extends Component {
             event.preventDefault();
         }
     };
-    _completedTaskAll = async () => {
+    _getAllCompleted = async () => {
         const completedTask = this.state.tasks.map((task) => {
             return { ...task, completed: true };
         });
@@ -203,7 +203,7 @@ export default class Scheduler extends Component {
                         <h1>Планировщик задач</h1>
 
                         <input
-                            onChange = { this._searchTask }
+                            onChange = { this._updateTasksFilter }
                             onKeyPress = { this._submitOnEnter }
                             placeholder = 'Поиск'
                             type = 'search'
@@ -217,7 +217,7 @@ export default class Scheduler extends Component {
                                 placeholder = 'Описaние моей новой задачи'
                                 type = 'text'
                                 value = { newMessage }
-                                onChange = { this._updateMessage }
+                                onChange = { this._updateNewTaskMessage }
                             />
                             <button type = 'submit'>Добавить задачу</button>
                         </form>
@@ -231,7 +231,7 @@ export default class Scheduler extends Component {
                     </section>
                     <footer>
                         <Checkbox
-                            onClick = { this._completedTaskAll }
+                            onClick ={ this._getAllCompleted }
                             inlineBlock
                             checked = { completed }
                             color1 = '#363636'
