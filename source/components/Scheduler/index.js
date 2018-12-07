@@ -121,9 +121,8 @@ export default class Scheduler extends Component {
         this.setState({
             tasks: favoriteSetState,
         });
-        const updateTask = favoriteSetState;
 
-        await api.updateTask(updateTask);
+        await api.updateTask(favoriteSetState);
 
     };
     _completedTask = async (id) => {
@@ -140,9 +139,8 @@ export default class Scheduler extends Component {
         });
 
         this.setState({ tasks: completedSetState });
-        const updateTask = completedSetState;
 
-        await api.updateTask(updateTask);
+        await api.updateTask(completedSetState);
     };
     _updateTasksFilter = (event) => {
         event.preventDefault();
@@ -162,24 +160,21 @@ export default class Scheduler extends Component {
         });
 
         this.setState({ tasks: completedTask });
-        const updateTask = completedTask;
 
-        await api.updateTask(updateTask);
+        await api.updateTask(completedTask);
     };
 
-    _updateTaskMessage = (id, updateTask) => {
-        console.log(id);
+    _updateTaskMessage = async (updateTask) => {
 
-        // const completedTask = this.state.tasks.map(task => {
-        //   if(task.id === id){
+        console.log(updateTask);
 
-        //       return [{ task: updateTask}, ...tasks];
-        //   }
-        // });
+        const editMessageTask = this.state.tasks.map((task) =>
+            task.id === updateTask.id ? updateTask : task
+        );
 
-        // this.setState({ tasks: completedTask });
+        this.setState({ tasks: editMessageTask });
 
-        // await api.updateTask(completedTask);
+        await api.updateTask(editMessageTask);
     }
 
     render () {
@@ -203,7 +198,7 @@ export default class Scheduler extends Component {
                     _completedTask = { this._completedTask }
                     _favoriteTask = { this._favoriteTask }
                     _removeTaskAsync = { this._removeTaskAsync }
-                    _updateNewTaskMessage = { this._updateNewTaskMessage }
+                    _updateTaskMessage = { this._updateTaskMessage }
                 />
             );
         });

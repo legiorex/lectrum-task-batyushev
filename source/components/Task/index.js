@@ -11,6 +11,7 @@ import Checkbox from '../../theme/assets/Checkbox';
 import Star from '../../theme/assets/Star';
 import Edit from '../../theme/assets/Edit';
 import Remove from '../../theme/assets/Remove';
+import { isNull } from 'util';
 
 export default class Task extends PureComponent {
     taskInput = createRef();
@@ -28,13 +29,14 @@ export default class Task extends PureComponent {
 
     state = {
         isEditing:   false,
-        editMessage: '',
+        editMessage: null,
     };
 
     _removeTask = () => {
         const { _removeTaskAsync, id } = this.props;
 
         _removeTaskAsync(id);
+
     };
 
     _favoriteTask = () => {
@@ -59,33 +61,35 @@ export default class Task extends PureComponent {
         _completedTask(id);
     };
     _onChangeTask = (event) => {
-        
+
         this.setState({ editMessage: event.target.value });
 
     };
 
     _updateTaskMessageOnKeyDown = (event) => {
-        event.preventDefault();
-        
-        const { id, created, completed, favorite, _updateNewTaskMessage } = this.props;
+
+        const { id, created, completed, favorite, _updateTaskMessage } = this.props;
+        let { message } = this.props;
+
+        message = '';
+        console.log(message);
         let { editMessage } = this.state;
 
-        
-        
-       
         if (event.key === "Enter") {
-           
-            console.log(event.target);
-            
-            
+            if (editMessage === "") {
+                return null;
+            }
             editMessage = event.target.value;
-            const updateTask = { id, message: editMessage, created, favorite };
+            const updateTask = { id, message: editMessage, created, favorite, completed };
 
-            
+            this.setState({ isEditing: false });
+            _updateTaskMessage(updateTask);
+
+        } else if (event.key === "Escape") {
+
+            this.setState({ isEditing: false, editMessage: null });
 
         }
-        
-        _updateNewTaskMessage(id, updateTask);
 
     }
 
@@ -94,7 +98,7 @@ export default class Task extends PureComponent {
         const { isEditing, editMessage } = this.state;
 
         const messageTask = () => {
-            if (!editMessage) {
+            if (editMessage === null) {
                 return message;
             }
 
