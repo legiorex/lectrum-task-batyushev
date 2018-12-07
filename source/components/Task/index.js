@@ -4,6 +4,7 @@ import moment from 'moment';
 
 // Instruments
 import Styles from './styles.m.css';
+import { api, TOKEN } from '../../REST'; // ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
 
 // Components
 import Checkbox from '../../theme/assets/Checkbox';
@@ -31,9 +32,9 @@ export default class Task extends PureComponent {
     };
 
     _removeTask = () => {
-        const { _removeTask, id } = this.props;
+        const { _removeTaskAsync, id } = this.props;
 
-        _removeTask(id);
+        _removeTaskAsync(id);
     };
 
     _favoriteTask = () => {
@@ -57,16 +58,37 @@ export default class Task extends PureComponent {
 
         _completedTask(id);
     };
-    _onChangeTask = (event) => {        
-
+    _onChangeTask = (event) => {
+        
         this.setState({ editMessage: event.target.value });
+
     };
+
+    _updateTaskMessageOnKeyDown = (event) => {
+        
+        const { id, created, completed, favorite, _updateNewTaskMessage } = this.props;
+        let { editMessage } = this.state;
+
+        
+        
+
+        if (event.key === "Enter") {
+            event.preventDefault();
+            console.log(event.target);
+            
+            editMessage = event.target.value;
+            const updateTask = { id, message: editMessage, created, favorite };
+
+            _updateNewTaskMessage(id, updateTask);
+
+        }
+
+    }
 
     render () {
         const { id, message, created, completed, favorite } = this.props;
         const { isEditing, editMessage } = this.state;
 
-        
         const messageTask = () => {
             if (!editMessage) {
                 return message;
@@ -89,6 +111,7 @@ export default class Task extends PureComponent {
                     <div>
                         <input
                             onChange = { this._onChangeTask }
+                            onKeyDown = { this._updateTaskMessageOnKeyDown }
                             ref = { this.taskInput }
                             disabled = { !isEditing }
                             maxLength = '50'
@@ -106,24 +129,24 @@ export default class Task extends PureComponent {
                         checked = { favorite }
                         className = { Styles.toggleTaskFavoriteState }
                         color1 = '#3B8EF3'
-                        color2 = '#000'                        
+                        color2 = '#000'
                         inlineBlock
                         onClick = { this._favoriteTask }
-                    />                  
+                    />
                     <Edit
                         onClick = { this._editTask }
                         className = { Styles.updateTaskMessageOnClick }
-                        inlineBlock                        
+                        inlineBlock
                         checked = { isEditing }
                         color1 = '#3B8EF3'
-                        color2 = '#000'                        
+                        color2 = '#000'
                     />
                     <Remove
                         onClick = { this._removeTask }
                         inlineBlock
                         color1 = '#3B8EF3'
-                        color2 = '#000'     
-                    />                    
+                        color2 = '#000'
+                    />
                 </div>
             </li>
         );

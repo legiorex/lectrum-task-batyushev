@@ -167,6 +167,21 @@ export default class Scheduler extends Component {
         await api.updateTask(updateTask);
     };
 
+    _updateTaskMessage = (id, updateTask) => {
+        console.log(id);
+
+        // const completedTask = this.state.tasks.map(task => {
+        //   if(task.id === id){
+
+        //       return [{ task: updateTask}, ...tasks];
+        //   }
+        // });
+
+        // this.setState({ tasks: completedTask });
+
+        // await api.updateTask(completedTask);
+    }
+
     render () {
         const { tasks, newMessage, searchTask } = this.state;
 
@@ -187,7 +202,8 @@ export default class Scheduler extends Component {
                     { ...task }
                     _completedTask = { this._completedTask }
                     _favoriteTask = { this._favoriteTask }
-                    _removeTask = { this._removeTask }
+                    _removeTaskAsync = { this._removeTaskAsync }
+                    _updateNewTaskMessage = { this._updateNewTaskMessage }
                 />
             );
         });
@@ -231,7 +247,7 @@ export default class Scheduler extends Component {
                     </section>
                     <footer>
                         <Checkbox
-                            onClick ={ this._getAllCompleted }
+                            onClick = { this._getAllCompleted }
                             inlineBlock
                             checked = { completed }
                             color1 = '#363636'
