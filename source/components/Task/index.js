@@ -65,23 +65,27 @@ export default class Task extends PureComponent {
     };
 
     _updateTaskMessageOnKeyDown = (event) => {
+        event.preventDefault();
         
         const { id, created, completed, favorite, _updateNewTaskMessage } = this.props;
         let { editMessage } = this.state;
 
         
         
-
+       
         if (event.key === "Enter") {
-            event.preventDefault();
+           
             console.log(event.target);
+            
             
             editMessage = event.target.value;
             const updateTask = { id, message: editMessage, created, favorite };
 
-            _updateNewTaskMessage(id, updateTask);
+            
 
         }
+        
+        _updateNewTaskMessage(id, updateTask);
 
     }
 
