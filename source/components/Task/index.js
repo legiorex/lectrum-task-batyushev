@@ -11,7 +11,6 @@ import Checkbox from '../../theme/assets/Checkbox';
 import Star from '../../theme/assets/Star';
 import Edit from '../../theme/assets/Edit';
 import Remove from '../../theme/assets/Remove';
-import { isNull } from 'util';
 
 export default class Task extends PureComponent {
     taskInput = createRef();
@@ -28,8 +27,8 @@ export default class Task extends PureComponent {
     });
 
     state = {
-        isEditing:   false,
-        editMessage: null,
+        isEditing:  false,
+        newMessage: this.props.message,
     };
 
     _removeTask = () => {
@@ -62,46 +61,38 @@ export default class Task extends PureComponent {
     };
     _onChangeTask = (event) => {
 
-        this.setState({ editMessage: event.target.value });
+        this.setState({ newMessage: event.target.value });
 
     };
 
     _updateTaskMessageOnKeyDown = (event) => {
 
         const { id, created, completed, favorite, _updateTaskMessage } = this.props;
-        
-        let { editMessage } = this.state;
+
+        const { newMessage } = this.state;
 
         if (event.key === "Enter") {
-            if (editMessage === "") {
-                return null;
-            }
-            editMessage = event.target.value;
-            const updateTask = { id, message: editMessage, created, favorite, completed };
+            
+            const updateTask = { id, message: newMessage, created, favorite, completed };
 
             this.setState({ isEditing: false });
             _updateTaskMessage(updateTask);
 
         } else if (event.key === "Escape") {
 
-            this.setState({ isEditing: false, editMessage: null });
+            this.setState({
+                isEditing:  false,
+                newMessage: this.props.message,
+            });
 
         }
 
     }
 
     render () {
-        const { id, message, created, completed, favorite } = this.props;
-        const { isEditing, editMessage } = this.state;
-
-        const messageTask = () => {
-            if (editMessage === null) {
-                return message;
-            }
-
-            return editMessage;
-        };
-
+        const { id, created, completed, favorite } = this.props;
+        const { isEditing, newMessage } = this.state;
+       
         return (
             <li className = { Styles.task } key = { id }>
                 <div className = { Styles.content }>
@@ -121,7 +112,7 @@ export default class Task extends PureComponent {
                             disabled = { !isEditing }
                             maxLength = '50'
                             type = 'text'
-                            value = { messageTask() }
+                            value = { newMessage }
                         />
                         <div className = { Styles.timeTask }>
                             {moment.unix(created).format('MMMM D h:mm:ss a')}

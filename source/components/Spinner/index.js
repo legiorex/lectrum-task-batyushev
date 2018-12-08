@@ -6,6 +6,8 @@ import Styles from "./styles.m.css";
 
 export default class Spinner extends Component {
     render () {
-        return <div className = { Styles.spinner } />;
+        const { isSpinning } = this.props;
+
+        return isSpinning ? <div className = { Styles.spinner } /> : null;
     }
 }

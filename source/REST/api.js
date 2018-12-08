@@ -3,9 +3,9 @@ export const api = {
 
     async fetchTasks () {
         const response = await fetch(MAIN_URL, {
-            method:  "GET",
+            method:  'GET',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization:  TOKEN,
             },
         });
@@ -17,9 +17,9 @@ export const api = {
     async createTask (newMessage) {
 
         const response = await fetch(MAIN_URL, {
-            method:  "POST",
+            method:  'POST',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization:  TOKEN,
             },
             body: JSON.stringify({ message: newMessage }),
@@ -32,7 +32,7 @@ export const api = {
     async removeTask (id) {
 
         await fetch(`${MAIN_URL}/${id}`, {
-            method:  "DELETE",
+            method:  'DELETE',
             headers: {
                 Authorization: TOKEN,
             },
@@ -41,13 +41,39 @@ export const api = {
     async updateTask (updateTask) {
 
         await fetch(MAIN_URL, {
-            method:  "PUT",
+            method:  'PUT',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization:  TOKEN,
             },
             body: JSON.stringify(updateTask),
         });
+    },
+
+    async completeAllTasks (tasks) {
+        const promises = [];
+
+        for (const task of tasks) {
+            promises.push(
+                fetch(MAIN_URL, {
+                    method:  'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization:  TOKEN,
+                    },
+                    body: JSON.stringify([{ ...task, completed: true }]),
+                }),
+            );
+        }
+
+        await Promise.all(promises);
+        // const responses = await Promise.all(promises);
+
+        // const success = responses.every((result) => result.status === 200);
+
+        // if (!success) {
+        //     throw new Error('Tasks were not completed');
+        // }
     },
 
 };
