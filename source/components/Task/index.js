@@ -13,20 +13,8 @@ import Edit from '../../theme/assets/Edit';
 import Remove from '../../theme/assets/Remove';
 
 export default class Task extends PureComponent {
-    textInput = createRef();
+    nameInput = createRef();
 
-    // constructor (props) {
-    //     super(props);
-    //     // create a ref to store the textInput DOM element
-    //     this.textInput = React.createRef();
-    //     this.focus = this.focus.bind(this);
-    // }
-
-    // focus () {
-    //     // Explicitly focus the text input using the raw DOM API
-    //     // Note: we're accessing "current" to get the DOM node
-    //     this.textInput.current.focus();
-    // }
       _getTaskShape = ({
           id = this.props.id,
           completed = this.props.completed,
@@ -41,10 +29,10 @@ export default class Task extends PureComponent {
 
     state = {
         isEditing:  false,
-        newMessage: this.props.message,
-        // autoFocus: false,
+        newMessage: this.props.message,        
     };
 
+    
     _removeTask = () => {
 
         const { _removeTaskAsync, id } = this.props;
@@ -60,13 +48,11 @@ export default class Task extends PureComponent {
     };
 
     _editTask = () => {
-        
-        console.log(this.textInput.current.autofocus);
-        this.textInput.current.autofocus = true;
-       
+
         const { isEditing } = this.state;
-       
-        this.setState({ isEditing: !isEditing });        
+
+        this.setState({ isEditing: !isEditing });
+
     };
 
     _completedTask = () => {
@@ -75,8 +61,7 @@ export default class Task extends PureComponent {
         _completedTask(id);
     };
     _onChangeTask = (event) => {
-        
-        // console.log(this.textInput)    
+
         this.setState({ newMessage: event.target.value });
 
     };
@@ -107,7 +92,7 @@ export default class Task extends PureComponent {
 
     render () {
         const { id, created, completed, favorite } = this.props;
-        const { isEditing, newMessage, autoFocus } = this.state;
+        const { isEditing, newMessage } = this.state;
 
         return (
             <li className = { Styles.task } key = { id }>
@@ -127,7 +112,7 @@ export default class Task extends PureComponent {
                             maxLength = '50'
                             onChange = { this._onChangeTask }
                             onKeyDown = { this._updateTaskMessageOnKeyDown }
-                            ref = { this.textInput }
+                            ref = { this.nameInput }
                             type = 'text'
                             value = { newMessage }
                         />

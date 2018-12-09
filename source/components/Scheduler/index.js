@@ -1,6 +1,6 @@
 // Core
 import React, { Component } from 'react';
-import moment from 'moment';
+import { Transition, CSSTransition, TransitionGroup } from "react-transition-group";
 
 // Instruments
 import Styles from './styles.m.css';
