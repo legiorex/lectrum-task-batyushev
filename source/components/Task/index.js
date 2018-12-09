@@ -13,25 +13,40 @@ import Edit from '../../theme/assets/Edit';
 import Remove from '../../theme/assets/Remove';
 
 export default class Task extends PureComponent {
-    taskInput = createRef();
-    _getTaskShape = ({
-        id = this.props.id,
-        completed = this.props.completed,
-        favorite = this.props.favorite,
-        message = this.props.message,
-    }) => ({
-        id,
-        completed,
-        favorite,
-        message,
-    });
+    textInput = createRef();
+
+    // constructor (props) {
+    //     super(props);
+    //     // create a ref to store the textInput DOM element
+    //     this.textInput = React.createRef();
+    //     this.focus = this.focus.bind(this);
+    // }
+
+    // focus () {
+    //     // Explicitly focus the text input using the raw DOM API
+    //     // Note: we're accessing "current" to get the DOM node
+    //     this.textInput.current.focus();
+    // }
+      _getTaskShape = ({
+          id = this.props.id,
+          completed = this.props.completed,
+          favorite = this.props.favorite,
+          message = this.props.message,
+      }) => ({
+          id,
+          completed,
+          favorite,
+          message,
+      });
 
     state = {
         isEditing:  false,
         newMessage: this.props.message,
+        // autoFocus: false,
     };
 
     _removeTask = () => {
+
         const { _removeTaskAsync, id } = this.props;
 
         _removeTaskAsync(id);
@@ -45,13 +60,13 @@ export default class Task extends PureComponent {
     };
 
     _editTask = () => {
+        
+        console.log(this.textInput.current.autofocus);
+        this.textInput.current.autofocus = true;
+       
         const { isEditing } = this.state;
-
-        if (!isEditing) {
-            return this.setState({ isEditing: true });
-        }
-
-        return this.setState({ isEditing: false });
+       
+        this.setState({ isEditing: !isEditing });        
     };
 
     _completedTask = () => {
@@ -60,7 +75,8 @@ export default class Task extends PureComponent {
         _completedTask(id);
     };
     _onChangeTask = (event) => {
-
+        
+        // console.log(this.textInput)    
         this.setState({ newMessage: event.target.value });
 
     };
@@ -72,7 +88,7 @@ export default class Task extends PureComponent {
         const { newMessage } = this.state;
 
         if (event.key === "Enter") {
-            
+
             const updateTask = { id, message: newMessage, created, favorite, completed };
 
             this.setState({ isEditing: false });
@@ -91,8 +107,8 @@ export default class Task extends PureComponent {
 
     render () {
         const { id, created, completed, favorite } = this.props;
-        const { isEditing, newMessage } = this.state;
-       
+        const { isEditing, newMessage, autoFocus } = this.state;
+
         return (
             <li className = { Styles.task } key = { id }>
                 <div className = { Styles.content }>
@@ -106,16 +122,17 @@ export default class Task extends PureComponent {
                     />
                     <div>
                         <input
-                            onChange = { this._onChangeTask }
-                            onKeyDown = { this._updateTaskMessageOnKeyDown }
-                            ref = { this.taskInput }
+                            autoFocus
                             disabled = { !isEditing }
                             maxLength = '50'
+                            onChange = { this._onChangeTask }
+                            onKeyDown = { this._updateTaskMessageOnKeyDown }
+                            ref = { this.textInput }
                             type = 'text'
                             value = { newMessage }
                         />
                         <div className = { Styles.timeTask }>
-                            {moment.unix(created).format('MMMM D h:mm:ss a')}
+                            {moment(created).format('MMMM D h:mm:ss a')}
                         </div>
                     </div>
                 </div>
