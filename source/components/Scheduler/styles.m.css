@@ -107,12 +107,40 @@
                 max-height: 370px;
                 overflow: scroll;
 
+                
+
                 &::-webkit-scrollbar {
                     display: none;
                 }
                 & div {
                     position: relative;
+
+
+                    &.postInStart {
+                        transform: scale(.5);
+                        opacity: .01;
+                    }
+
+                    &.postInEnd {
+                        transform: scale(1);
+                        transition: opacity 500ms var(--cubic1), transform 500ms var(--cubic1);
+                        opacity: 1;
+                    }
+
+                    &.postOutStart {
+                        transform: scale(1);
+                        opacity: 1;
+                    }
+
+                    &.postOutEnd {
+                        transform: scale(.5);
+                        transition: opacity 400ms var(--cubic2), transform 400ms var(--cubic2);
+                        opacity: .01;
+                    }
+
                 }
+
+                
             }
         }
 

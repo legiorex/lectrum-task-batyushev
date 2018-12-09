@@ -179,14 +179,31 @@ export default class Scheduler extends Component {
         const tasksJSX = sortTask.map((task) => {
             // рендер массива задач и передача пропсов
             return (
-                <Task
+                <CSSTransition
+                    classNames = { {
+                        enter:       Styles.postInStart,
+                        enterActive: Styles.postInEnd,
+                        exit:        Styles.postOutStart,
+                        exitActive:  Styles.postOutEnd,
+                    } }
                     key = { task.id }
-                    { ...task }
-                    _completedTask = { this._completedTask }
-                    _favoriteTask = { this._favoriteTask }
-                    _removeTaskAsync = { this._removeTaskAsync }
-                    _updateTaskMessage = { this._updateTaskMessage }
-                />
+                    timeout = { {
+                        enter: 500,
+                        exit:  400,
+                    } }>
+                    <TransitionGroup>
+                        <Task
+
+                            { ...task }
+                            _completedTask = { this._completedTask }
+                            _favoriteTask = { this._favoriteTask }
+                            _removeTaskAsync = { this._removeTaskAsync }
+                            _updateTaskMessage = { this._updateTaskMessage }
+                        />
+                    </TransitionGroup>
+
+                </CSSTransition>
+
             );
         });
 
@@ -210,7 +227,7 @@ export default class Scheduler extends Component {
                     <div>
                         <ul>
                             <div style = { { position: "relative" } }>
-                                {tasksJSX}
+                                <TransitionGroup>{tasksJSX}</TransitionGroup>
                             </div>
                         </ul>
                     </div>
