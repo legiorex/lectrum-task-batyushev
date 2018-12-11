@@ -180,12 +180,7 @@ export default class Scheduler extends Component {
         const tasksJSX = sortTask.map((task) => {
             // рендер массива задач и передача пропсов
             return (
-                <FlipMove
-                    duration = { 500 }
-                    enterAnimation = 'accordionVertical'
-                    leaveAnimation = 'accordionVertical'
-                    staggerDurationBy = '30'
-                    typeName = 'ul'>
+                
                     <Task
                         key = { task.id }
                         { ...task }
@@ -194,7 +189,7 @@ export default class Scheduler extends Component {
                         _removeTaskAsync = { this._removeTaskAsync }
                         _updateTaskMessage = { this._updateTaskMessage }
                     />
-                </FlipMove>
+                
             );
         });
 
@@ -231,8 +226,14 @@ export default class Scheduler extends Component {
                         <div>
                             <ul>
                                 <div style = { { position: 'relative' } }>
-                                    
+                                <FlipMove
+                                    duration={500}
+                                    enterAnimation='accordionVertical'
+                                    leaveAnimation='accordionVertical'
+                                    staggerDurationBy='30'
+                                    typeName='ul'>
                                         {tasksJSX}
+                                    </FlipMove>
                                     
                                 </div>
                             </ul>

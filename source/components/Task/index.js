@@ -1,13 +1,6 @@
 // Core
 import React, { PureComponent, createRef } from 'react';
 import moment from 'moment';
-import FlipMove from 'react-flip-move';
-
-import {
-    Transition,
-    CSSTransition,
-    TransitionGroup
-} from 'react-transition-group';
 
 // Instruments
 import Styles from './styles.m.css';
@@ -109,65 +102,58 @@ export default class Task extends PureComponent {
         const { isEditing, newMessage } = this.state;
 
         return (
-            <FlipMove
-                duration = { 500 }
-                enterAnimation = 'accordionVertical'
-                leaveAnimation = 'accordionVertical'
-                staggerDurationBy = '30'
-                typeName = 'ul'>
-                <li className = { Styles.task } key = { id }>
-                    <div className = { Styles.content }>
-                        <Checkbox
-                            inlineBlock
-                            checked = { completed }
-                            onClick = { this._completedTask }
-                            className = { Styles.toggleTaskCompletedState }
-                            color1 = '#3B8EF3'
-                            color2 = '#FFF'
+            <li className = { Styles.task } key = { id }>
+                <div className = { Styles.content }>
+                    <Checkbox
+                        inlineBlock
+                        checked = { completed }
+                        onClick = { this._completedTask }
+                        className = { Styles.toggleTaskCompletedState }
+                        color1 = '#3B8EF3'
+                        color2 = '#FFF'
+                    />
+                    <div>
+                        <input
+                            autoFocus
+                            disabled = { !isEditing }
+                            maxLength = '50'
+                            onChange = { this._onChangeTask }
+                            onKeyDown = { this._updateTaskMessageOnKeyDown }
+                            ref = { this.taskInput }
+                            type = 'text'
+                            value = { newMessage }
                         />
-                        <div>
-                            <input
-                                autoFocus
-                                disabled = { !isEditing }
-                                maxLength = '50'
-                                onChange = { this._onChangeTask }
-                                onKeyDown = { this._updateTaskMessageOnKeyDown }
-                                ref = { this.taskInput }
-                                type = 'text'
-                                value = { newMessage }
-                            />
-                            <div className = { Styles.timeTask }>
-                                {moment(created).format('MMMM D h:mm:ss a')}
-                            </div>
+                        <div className = { Styles.timeTask }>
+                            {moment(created).format('MMMM D h:mm:ss a')}
                         </div>
                     </div>
+                </div>
 
-                    <div className = { Styles.actions }>
-                        <Star
-                            checked = { favorite }
-                            className = { Styles.toggleTaskFavoriteState }
-                            color1 = '#3B8EF3'
-                            color2 = '#000'
-                            inlineBlock
-                            onClick = { this._favoriteTask }
-                        />
-                        <Edit
-                            onClick = { this._setTaskEditingState }
-                            className = { Styles.updateTaskMessageOnClick }
-                            inlineBlock
-                            checked = { isEditing }
-                            color1 = '#3B8EF3'
-                            color2 = '#000'
-                        />
-                        <Remove
-                            onClick = { this._removeTask }
-                            inlineBlock
-                            color1 = '#3B8EF3'
-                            color2 = '#000'
-                        />
-                    </div>
-                </li>
-            </FlipMove>
+                <div className = { Styles.actions }>
+                    <Star
+                        checked = { favorite }
+                        className = { Styles.toggleTaskFavoriteState }
+                        color1 = '#3B8EF3'
+                        color2 = '#000'
+                        inlineBlock
+                        onClick = { this._favoriteTask }
+                    />
+                    <Edit
+                        onClick = { this._setTaskEditingState }
+                        className = { Styles.updateTaskMessageOnClick }
+                        inlineBlock
+                        checked = { isEditing }
+                        color1 = '#3B8EF3'
+                        color2 = '#000'
+                    />
+                    <Remove
+                        onClick = { this._removeTask }
+                        inlineBlock
+                        color1 = '#3B8EF3'
+                        color2 = '#000'
+                    />
+                </div>
+            </li>
         );
     }
 }
