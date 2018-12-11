@@ -27,8 +27,8 @@
         "moment": "~2.22.2",
         "react": "~16.4.1",
         "react-dom": "~16.4.1",
-        "react-flip-move": "~3.0.2",
-        "react-transition-group": "^2.5.0",
+        "react-flip-move": "^3.0.3",
+        "react-transition-group": "^2.5.1",
         "reset-css": "~4.0.1"
     },
     "devDependencies": {

@@ -1,7 +1,13 @@
 // Core
 import React, { PureComponent, createRef } from 'react';
 import moment from 'moment';
-import { Transition, CSSTransition, TransitionGroup } from "react-transition-group";
+import FlipMove from 'react-flip-move';
+
+import {
+    Transition,
+    CSSTransition,
+    TransitionGroup
+} from 'react-transition-group';
 
 // Instruments
 import Styles from './styles.m.css';
@@ -14,19 +20,19 @@ import Edit from '../../theme/assets/Edit';
 import Remove from '../../theme/assets/Remove';
 
 export default class Task extends PureComponent {
-    nameInput = createRef();
+    taskInput = createRef();
 
-      _getTaskShape = ({
-          id = this.props.id,
-          completed = this.props.completed,
-          favorite = this.props.favorite,
-          message = this.props.message,
-      }) => ({
-          id,
-          completed,
-          favorite,
-          message,
-      });
+    _getTaskShape = ({
+        id = this.props.id,
+        completed = this.props.completed,
+        favorite = this.props.favorite,
+        message = this.props.message,
+    }) => ({
+        id,
+        completed,
+        favorite,
+        message,
+    });
 
     state = {
         isEditing:  false,
@@ -34,11 +40,9 @@ export default class Task extends PureComponent {
     };
 
     _removeTask = () => {
-
         const { _removeTaskAsync, id } = this.props;
 
         _removeTaskAsync(id);
-
     };
 
     _favoriteTask = () => {
@@ -47,13 +51,18 @@ export default class Task extends PureComponent {
         _favoriteTask(id);
     };
 
-    _editTask = () => {
-
+    _setTaskEditingState = () => {
         const { isEditing } = this.state;
 
-        this.setState({ isEditing: !isEditing });
-        // this.nameInput.current.focus = true;
+        this.setState(
+            { isEditing: !isEditing },
 
+            () => {
+                if (!isEditing) {
+                    this.taskInput.current.focus();
+                }
+            }
+        );
     };
 
     _completedTask = () => {
@@ -62,72 +71,103 @@ export default class Task extends PureComponent {
         _completedTask(id);
     };
     _onChangeTask = (event) => {
-
         this.setState({ newMessage: event.target.value });
-
     };
 
     _updateTaskMessageOnKeyDown = (event) => {
-
-        const { id, created, completed, favorite, _updateTaskMessage } = this.props;
+        const {
+            id,
+            created,
+            completed,
+            favorite,
+            _updateTaskMessage,
+        } = this.props;
 
         const { newMessage } = this.state;
 
-        if (event.key === "Enter") {
-
-            const updateTask = { id, message: newMessage, created, favorite, completed };
+        if (event.key === 'Enter') {
+            const updateTask = {
+                id,
+                message: newMessage,
+                created,
+                favorite,
+                completed,
+            };
 
             this.setState({ isEditing: false });
             _updateTaskMessage(updateTask);
-
-        } else if (event.key === "Escape") {
-
+        } else if (event.key === 'Escape') {
             this.setState({
                 isEditing:  false,
                 newMessage: this.props.message,
             });
-
         }
-
-    }
+    };
 
     render () {
         const { id, created, completed, favorite } = this.props;
         const { isEditing, newMessage } = this.state;
 
-        return (<CSSTransition
-            classNames = { {
-                enter:       Styles.postInStart,
-                enterActive: Styles.postInEnd,
-                exit:        Styles.postOutStart,
-                exitActive:  Styles.postOutEnd,
-            } }
-            key = { id }
-            
-            timeout = { {
-                enter: 500,
-                exit:  400,
-            } }>
-            <TransitionGroup>
-                <li className = { Styles.task } >
+        return (
+            <FlipMove
+                duration = { 500 }
+                enterAnimation = 'accordionVertical'
+                leaveAnimation = 'accordionVertical'
+                staggerDurationBy = '30'
+                typeName = 'ul'>
+                <li className = { Styles.task } key = { id }>
                     <div className = { Styles.content }>
-                        <Checkbox inlineBlock checked = { completed } onClick = { this._completedTask } className = { Styles.toggleTaskCompletedState } color1 = '#3B8EF3' color2 = '#FFF' />
+                        <Checkbox
+                            inlineBlock
+                            checked = { completed }
+                            onClick = { this._completedTask }
+                            className = { Styles.toggleTaskCompletedState }
+                            color1 = '#3B8EF3'
+                            color2 = '#FFF'
+                        />
                         <div>
-                            <input autoFocus disabled = { !isEditing } maxLength = '50' onChange = { this._onChangeTask } onKeyDown = { this._updateTaskMessageOnKeyDown } ref = { this.nameInput } type = 'text' value = { newMessage } />
+                            <input
+                                autoFocus
+                                disabled = { !isEditing }
+                                maxLength = '50'
+                                onChange = { this._onChangeTask }
+                                onKeyDown = { this._updateTaskMessageOnKeyDown }
+                                ref = { this.taskInput }
+                                type = 'text'
+                                value = { newMessage }
+                            />
                             <div className = { Styles.timeTask }>
-                                {moment(created).format("MMMM D h:mm:ss a")}
+                                {moment(created).format('MMMM D h:mm:ss a')}
                             </div>
                         </div>
                     </div>
 
                     <div className = { Styles.actions }>
-                        <Star checked = { favorite } className = { Styles.toggleTaskFavoriteState } color1 = '#3B8EF3' color2 = '#000' inlineBlock onClick = { this._favoriteTask } />
-                        <Edit onClick = { this._editTask } className = { Styles.updateTaskMessageOnClick } inlineBlock checked = { isEditing } color1 = '#3B8EF3' color2 = '#000' />
-                        <Remove onClick = { this._removeTask } inlineBlock color1 = '#3B8EF3' color2 = '#000' />
+                        <Star
+                            checked = { favorite }
+                            className = { Styles.toggleTaskFavoriteState }
+                            color1 = '#3B8EF3'
+                            color2 = '#000'
+                            inlineBlock
+                            onClick = { this._favoriteTask }
+                        />
+                        <Edit
+                            onClick = { this._setTaskEditingState }
+                            className = { Styles.updateTaskMessageOnClick }
+                            inlineBlock
+                            checked = { isEditing }
+                            color1 = '#3B8EF3'
+                            color2 = '#000'
+                        />
+                        <Remove
+                            onClick = { this._removeTask }
+                            inlineBlock
+                            color1 = '#3B8EF3'
+                            color2 = '#000'
+                        />
                     </div>
                 </li>
-            </TransitionGroup>
-
-        </CSSTransition>);
+            </FlipMove>
+        );
     }
 }

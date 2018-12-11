@@ -1,6 +1,11 @@
 // Core
 import React, { Component } from 'react';
-import { Transition, CSSTransition, TransitionGroup } from "react-transition-group";
+import {
+    Transition,
+    CSSTransition,
+    TransitionGroup
+} from 'react-transition-group';
+import FlipMove from 'react-flip-move';
 
 // Instruments
 import Styles from './styles.m.css';
@@ -8,7 +13,7 @@ import { sortTasksByGroup } from 'instruments';
 import { api } from '../../REST'; // ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
 
 // Components
-import Task from "../Task";
+import Task from '../Task';
 import Spinner from '../Spinner';
 import Checkbox from '../../theme/assets/Checkbox';
 export default class Scheduler extends Component {
@@ -28,9 +33,7 @@ export default class Scheduler extends Component {
     };
 
     _setTasksFetchingState = (state) => {
-
         this.setState({ isSpinning: state });
-
     };
 
     componentDidMount () {
@@ -117,7 +120,6 @@ export default class Scheduler extends Component {
 
         await api.updateTask(favoriteSetState);
         this.setState({ tasks: favoriteSetState, isSpinning: false });
-
     };
     _completedTask = async (id) => {
         this._setTasksFetchingState(true);
@@ -153,11 +155,10 @@ export default class Scheduler extends Component {
     };
 
     _updateTaskMessage = async (updateTask) => {
-
         this._setTasksFetchingState(true);
 
-        const editMessageTask = this.state.tasks.map((task) =>
-            task.id === updateTask.id ? updateTask : task
+        const editMessageTask = this.state.tasks.map(
+            (task) => task.id === updateTask.id ? updateTask : task
         );
 
         await api.updateTask(editMessageTask);
@@ -179,31 +180,21 @@ export default class Scheduler extends Component {
         const tasksJSX = sortTask.map((task) => {
             // рендер массива задач и передача пропсов
             return (
-                <CSSTransition
-                    classNames = { {
-                        enter:       Styles.postInStart,
-                        enterActive: Styles.postInEnd,
-                        exit:        Styles.postOutStart,
-                        exitActive:  Styles.postOutEnd,
-                    } }
-                    key = { task.id }
-                    timeout = { {
-                        enter: 500,
-                        exit:  400,
-                    } }>
-                    <TransitionGroup>
-                        <Task
-
-                            { ...task }
-                            _completedTask = { this._completedTask }
-                            _favoriteTask = { this._favoriteTask }
-                            _removeTaskAsync = { this._removeTaskAsync }
-                            _updateTaskMessage = { this._updateTaskMessage }
-                        />
-                    </TransitionGroup>
-
-                </CSSTransition>
-
+                <FlipMove
+                    duration = { 500 }
+                    enterAnimation = 'accordionVertical'
+                    leaveAnimation = 'accordionVertical'
+                    staggerDurationBy = '30'
+                    typeName = 'ul'>
+                    <Task
+                        key = { task.id }
+                        { ...task }
+                        _completedTask = { this._completedTask }
+                        _favoriteTask = { this._favoriteTask }
+                        _removeTaskAsync = { this._removeTaskAsync }
+                        _updateTaskMessage = { this._updateTaskMessage }
+                    />
+                </FlipMove>
             );
         });
 
@@ -211,34 +202,56 @@ export default class Scheduler extends Component {
             return task.completed;
         });
 
-        return (<section className = { Styles.scheduler }>
-            <main>
-                <Spinner isSpinning = { isSpinning } />
-                <header>
-                    <h1>Планировщик задач</h1>
+        return (
+            <section className = { Styles.scheduler }>
+                <main>
+                    <Spinner isSpinning = { isSpinning } />
+                    <header>
+                        <h1>Планировщик задач</h1>
 
-                    <input onChange = { this._updateTasksFilter } onKeyPress = { this._submitOnEnter } placeholder = 'Поиск' type = 'search' value = { searchTask } />
-                </header>
-                <section>
-                    <form onSubmit = { this._handleFormSubmit }>
-                        <input maxLength = '50' placeholder = 'Описaние моей новой задачи' type = 'text' value = { newMessage } onChange = { this._updateNewTaskMessage } />
-                        <button type = 'submit'>Добавить задачу</button>
-                    </form>
-                    <div>
-                        <ul>
-                            <div style = { { position: "relative" } }>
-                                <TransitionGroup>{tasksJSX}</TransitionGroup>
-                            </div>
-                        </ul>
-                    </div>
-                </section>
-                <footer>
-                    <Checkbox onClick = { this._completeAllTasksAsync } inlineBlock checked = { completed } color1 = '#363636' color2 = '#FFF' />
-                    <span className = { Styles.completeAllTasks }>
-                  Все задачи выполнены
-                    </span>
-                </footer>
-            </main>
-        </section>);
+                        <input
+                            onChange = { this._updateTasksFilter }
+                            onKeyPress = { this._submitOnEnter }
+                            placeholder = 'Поиск'
+                            type = 'search'
+                            value = { searchTask }
+                        />
+                    </header>
+                    <section>
+                        <form onSubmit = { this._handleFormSubmit }>
+                            <input
+                                maxLength = '50'
+                                placeholder = 'Описaние моей новой задачи'
+                                type = 'text'
+                                value = { newMessage }
+                                onChange = { this._updateNewTaskMessage }
+                            />
+                            <button type = 'submit'>Добавить задачу</button>
+                        </form>
+                        <div>
+                            <ul>
+                                <div style = { { position: 'relative' } }>
+                                    
+                                        {tasksJSX}
+                                    
+                                </div>
+                            </ul>
+                        </div>
+                    </section>
+                    <footer>
+                        <Checkbox
+                            onClick = { this._completeAllTasksAsync }
+                            inlineBlock
+                            checked = { completed }
+                            color1 = '#363636'
+                            color2 = '#FFF'
+                        />
+                        <span className = { Styles.completeAllTasks }>
+                            Все задачи выполнены
+                        </span>
+                    </footer>
+                </main>
+            </section>
+        );
     }
 }
