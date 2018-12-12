@@ -165,6 +165,14 @@ export default class Scheduler extends Component {
         this.setState({ tasks: editMessageTask, isSpinning: false });
     };
 
+    _getAllCompleted = () => {
+        return (
+            this.state.tasks.every((task) => {
+                return task.completed;
+            })
+        );
+    }
+
     render () {
         const { tasks, newMessage, searchTask, isSpinning } = this.state;
 
@@ -180,22 +188,24 @@ export default class Scheduler extends Component {
         const tasksJSX = sortTask.map((task) => {
             // рендер массива задач и передача пропсов
             return (
-                
-                    <Task
-                        key = { task.id }
-                        { ...task }
-                        _completedTask = { this._completedTask }
-                        _favoriteTask = { this._favoriteTask }
-                        _removeTaskAsync = { this._removeTaskAsync }
-                        _updateTaskMessage = { this._updateTaskMessage }
-                    />
-                
+
+                <Task
+                    key = { task.id }
+                    { ...task }
+                    _completedTask = { this._completedTask }
+                    _favoriteTask = { this._favoriteTask }
+                    _removeTaskAsync = { this._removeTaskAsync }
+                    _updateTaskMessage = { this._updateTaskMessage }
+                />
+
             );
         });
 
-        const completed = tasks.every((task) => {
-            return task.completed;
-        });
+        // const completed = tasks.every((task) => {
+        //     return task.completed;
+        // });
+        // console.log(this._getAllCompleted());
+        // this._getAllCompleted();
 
         return (
             <section className = { Styles.scheduler }>
@@ -226,15 +236,15 @@ export default class Scheduler extends Component {
                         <div>
                             <ul>
                                 <div style = { { position: 'relative' } }>
-                                <FlipMove
-                                    duration={500}
-                                    enterAnimation='accordionVertical'
-                                    leaveAnimation='accordionVertical'
-                                    staggerDurationBy='30'
-                                    typeName='ul'>
+                                    <FlipMove
+                                        duration = { 500 }
+                                        enterAnimation = 'accordionVertical'
+                                        leaveAnimation = 'accordionVertical'
+                                        staggerDurationBy = '30'
+                                        typeName = 'ul'>
                                         {tasksJSX}
                                     </FlipMove>
-                                    
+
                                 </div>
                             </ul>
                         </div>
@@ -243,7 +253,7 @@ export default class Scheduler extends Component {
                         <Checkbox
                             onClick = { this._completeAllTasksAsync }
                             inlineBlock
-                            checked = { completed }
+                            checked = { this._getAllCompleted() }
                             color1 = '#363636'
                             color2 = '#FFF'
                         />
