@@ -4,7 +4,6 @@ import moment from 'moment';
 
 // Instruments
 import Styles from './styles.m.css';
-import { api, TOKEN } from '../../REST'; // ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
 
 // Components
 import Checkbox from '../../theme/assets/Checkbox';

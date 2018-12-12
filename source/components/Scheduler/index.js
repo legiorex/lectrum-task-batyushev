@@ -1,10 +1,6 @@
 // Core
 import React, { Component } from 'react';
-import {
-    Transition,
-    CSSTransition,
-    TransitionGroup
-} from 'react-transition-group';
+
 import FlipMove from 'react-flip-move';
 
 // Instruments
@@ -200,12 +196,6 @@ export default class Scheduler extends Component {
 
             );
         });
-
-        // const completed = tasks.every((task) => {
-        //     return task.completed;
-        // });
-        // console.log(this._getAllCompleted());
-        // this._getAllCompleted();
 
         return (
             <section className = { Styles.scheduler }>
