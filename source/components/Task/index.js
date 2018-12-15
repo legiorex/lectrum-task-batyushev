@@ -28,7 +28,7 @@ export default class Task extends PureComponent {
 
     state = {
         isEditing:  false,
-        newMessage: this.props.message,
+        newTaskMessage: this.props.message,
     };
 
     _removeTask = () => {
@@ -63,7 +63,7 @@ export default class Task extends PureComponent {
         _completedTask(id);
     };
     _onChangeTask = (event) => {
-        this.setState({ newMessage: event.target.value });
+        this.setState({ newTaskMessage: event.target.value });
     };
 
     _updateTaskMessageOnKeyDown = (event) => {
@@ -75,12 +75,12 @@ export default class Task extends PureComponent {
             _updateTaskMessage,
         } = this.props;
 
-        const { newMessage } = this.state;
+        const { newTaskMessage } = this.state;
 
         if (event.key === 'Enter') {
             const updateTask = {
                 id,
-                message: newMessage,
+                message: newTaskMessage,
                 created,
                 favorite,
                 completed,
@@ -91,14 +91,14 @@ export default class Task extends PureComponent {
         } else if (event.key === 'Escape') {
             this.setState({
                 isEditing:  false,
-                newMessage: this.props.message,
+                newTaskMessage: this.props.message,
             });
         }
     };
 
     render () {
         const { id, created, completed, favorite } = this.props;
-        const { isEditing, newMessage } = this.state;
+        const { isEditing, newTaskMessage } = this.state;
 
         return (
             <li className = { Styles.task } key = { id }>
@@ -120,7 +120,7 @@ export default class Task extends PureComponent {
                             onKeyDown = { this._updateTaskMessageOnKeyDown }
                             ref = { this.taskInput }
                             type = 'text'
-                            value = { newMessage }
+                            value = { newTaskMessage }
                         />
                         <div className = { Styles.timeTask }>
                             {moment(created).format('MMMM D h:mm:ss a')}
